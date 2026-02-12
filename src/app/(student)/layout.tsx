@@ -1,7 +1,7 @@
+import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/supabase/server';
 import { StudentSidebar } from '@/components/layout/StudentSidebar';
 import { SchoolThemeProvider } from '@/components/providers/SchoolThemeProvider';
-import { redirect } from 'next/navigation';
 
 export default async function StudentLayout({
   children,
@@ -19,33 +19,35 @@ export default async function StudentLayout({
   // Get user's school membership
   const { data: membership } = await (supabase
     .from('school_members')
-    .select('school_id')
+    .select('*')
     .eq('user_id', user.id)
     .eq('status', 'active')
     .maybeSingle() as any);
 
   if (!membership) {
-    redirect('/iniciar-sesion');
+    redirect('/elegir-destino');
   }
 
-  // Get school data with colors
+  // Get school colors for theming
   const { data: school } = await (supabase
     .from('schools')
-    .select('name, primary_color, secondary_color')
+    .select('primary_color, secondary_color')
     .eq('id', membership.school_id)
     .maybeSingle() as any);
 
-  const primaryColor = school?.primary_color || '#3B82F6';
-  const secondaryColor = school?.secondary_color || '#1E40AF';
+  const schoolColors = {
+    primary: school?.primary_color || '#3b82f6',
+    secondary: school?.secondary_color || '#1e40af',
+  };
 
   return (
-    <SchoolThemeProvider colors={{ primary: primaryColor, secondary: secondaryColor }}>
-      <div className="flex h-screen overflow-hidden bg-[#F8F9FB]">
-        <aside className="w-60 flex-shrink-0 hidden md:block bg-white" style={{ boxShadow: '1px 0 0 rgba(0,0,0,0.04)' }}>
-          <StudentSidebar />
-        </aside>
-        <main className="flex-1 overflow-y-auto flex flex-col">
-          <div className="flex-1">
+    <SchoolThemeProvider colors={schoolColors}>
+      <div className="flex h-screen">
+        <StudentSidebar />
+        <main className="flex-1 overflow-y-auto">
+          <div className="min-h-screen p-6 md:p-8" style={{
+            background: `linear-gradient(180deg, ${schoolColors.primary}08 0%, ${schoolColors.secondary}03 20%, white 50%)`,
+          }}>
             {children}
           </div>
         </main>

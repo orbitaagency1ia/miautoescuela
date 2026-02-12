@@ -121,15 +121,18 @@ export function LessonCard({
       <div
         onClick={handleCardClick}
         className={cn(
-          'group overflow-hidden rounded-2xl bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 cursor-pointer',
+          'group relative overflow-hidden rounded-[20px] bg-white shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 cursor-pointer border-2 border-transparent hover:border-slate-200',
           isDragging ? 'opacity-50 scale-95' : '',
-          lesson.is_published ? 'border-l-4 border-blue-500' : 'border-l-4 border-transparent'
+          lesson.is_published ? '' : 'opacity-70'
         )}
       >
-        <div className="flex items-center gap-4 p-4">
+        {/* Hover gradient background */}
+        <div className="absolute inset-0 rounded-[20px] bg-gradient-to-br from-slate-50/0 to-blue-50/0 group-hover:from-slate-50/50 group-hover:to-blue-50/50 transition-all duration-300 pointer-events-none" />
+
+        <div className="relative flex items-center gap-5 p-6">
           {/* Drag Handle */}
           <div
-            className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-400"
+            className="cursor-grab active:cursor-grabbing text-slate-300 hover:text-slate-400 transition-colors"
             onClick={(e) => e.stopPropagation()}
             onDragStart={(e) => e.stopPropagation()}
           >
@@ -139,16 +142,13 @@ export function LessonCard({
           {/* Thumbnail / Video Icon */}
           <div
             className={cn(
-              'relative flex-shrink-0 w-24 h-16 rounded-xl overflow-hidden',
-              'bg-gradient-to-br shadow-md',
-              lesson.is_published
-                ? 'from-blue-50 to-indigo-50'
-                : 'from-gray-50 to-gray-100 opacity-60'
+              'relative flex-shrink-0 w-32 h-20 rounded-xl overflow-hidden shadow-md group-hover:scale-105 group-hover:rotate-1 transition-all duration-300',
+              lesson.is_published ? '' : 'grayscale'
             )}
             style={{
               background: lesson.is_published
-                ? `linear-gradient(135deg, ${primaryColor}15 0%, ${secondaryColor}15 100%)`
-                : undefined,
+                ? `linear-gradient(135deg, ${primaryColor}20 0%, ${secondaryColor}20 100%)`
+                : `linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)`,
             }}
           >
             {lesson.thumbnail_url ? (
@@ -159,25 +159,30 @@ export function LessonCard({
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <Video className="h-6 w-6" style={{ color: primaryColor }} />
+                <Video className="h-8 w-8" style={{ color: primaryColor }} />
               </div>
             )}
           </div>
 
           {/* Content */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-start justify-between gap-4">
               <div className="flex-1 min-w-0">
-                <h3 className={cn(
-                  'font-semibold text-gray-900 truncate',
-                  !lesson.is_published && 'text-gray-500'
-                )}>
-                  {lesson.title}
-                </h3>
-                {!lesson.is_published && (
-                  <Badge variant="outline" className="text-xs">
-                    Borrador
-                  </Badge>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className={cn(
+                    'text-lg font-semibold text-slate-900 truncate',
+                    !lesson.is_published && 'text-slate-500'
+                  )}>
+                    {lesson.title}
+                  </h3>
+                  {!lesson.is_published && (
+                    <Badge variant="outline" className="text-xs border-slate-200 text-slate-500">
+                      Borrador
+                    </Badge>
+                  )}
+                </div>
+                {lesson.description && (
+                  <p className="text-sm text-slate-500 line-clamp-1">{lesson.description}</p>
                 )}
               </div>
 
@@ -187,19 +192,13 @@ export function LessonCard({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                    className="h-9 w-9 p-0 opacity-0 group-hover:opacity-100 transition-opacity rounded-xl"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <MoreVertical className="h-4 w-4 text-gray-400" />
+                    <MoreVertical className="h-4 w-4 text-slate-400" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-48">
-                  {onPlay && lesson.video_path && (
-                    <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onPlay?.(lesson); }}>
-                      <Play className="h-4 w-4 mr-2 text-slate-400" />
-                      Reproducir
-                    </DropdownMenuItem>
-                  )}
                   <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit?.(lesson); }}>
                     <Edit className="h-4 w-4 mr-2 text-slate-400" />
                     Editar
@@ -229,23 +228,28 @@ export function LessonCard({
             </div>
 
             {/* Metadata */}
-            <div className="flex items-center gap-3 text-xs text-gray-400">
+            <div className="flex items-center gap-4 text-sm text-slate-500 mt-2">
               {lesson.video_duration_seconds && (
-                <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-100">
+                  <Clock className="h-3.5 w-3.5" />
                   {formatDuration(lesson.video_duration_seconds)}
                 </span>
               )}
               {lesson.video_path && (
-                <span className="flex items-center gap-1 text-green-600">
-                  <CheckCircle2 className="h-3 w-3" />
-                  Video subido
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-700 font-medium">
+                  <CheckCircle2 className="h-3.5 w-3.5" />
+                  Video
                 </span>
               )}
               {!lesson.video_path && (
-                <span className="flex items-center gap-1 text-orange-600">
-                  <AlertCircle className="h-3 w-3" />
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-100 text-amber-700 font-medium">
+                  <AlertCircle className="h-3.5 w-3.5" />
                   Sin video
+                </span>
+              )}
+              {lesson.order_index !== undefined && (
+                <span className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 font-medium">
+                  <span className="font-semibold">#{lesson.order_index + 1}</span>
                 </span>
               )}
             </div>

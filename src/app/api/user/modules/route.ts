@@ -28,7 +28,7 @@ export async function GET() {
       );
     }
 
-    // Get published modules with lessons
+    // Get published modules with published lessons
     const { data: modules, error: modulesError } = await (supabase
       .from('modules')
       .select(`
@@ -36,12 +36,13 @@ export async function GET() {
         title,
         description,
         order_index,
-        lessons (
+        lessons!inner (
           id,
           title,
           description,
           video_path,
-          order_index
+          order_index,
+          is_published
         )
       `)
       .eq('school_id', membership.school_id)
@@ -56,11 +57,11 @@ export async function GET() {
       );
     }
 
-    // Sort lessons within each module and filter only published lessons
+    // Filter and sort lessons within each module
     const modulesWithSortedLessons = (modules || []).map((module: any) => ({
       ...module,
       lessons: (module.lessons || [])
-        .filter((l: any) => l !== null)
+        .filter((l: any) => l.is_published)
         .sort((a: any, b: any) => a.order_index - b.order_index),
     }));
 

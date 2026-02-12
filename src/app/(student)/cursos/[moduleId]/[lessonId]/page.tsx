@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { LessonsSidebar } from '@/components/student/LessonsSidebar';
 import { PremiumMarkCompleteButton } from '@/components/student/PremiumMarkCompleteButton';
+import { NextLessonButton } from '@/components/student/NextLessonButton';
 
 interface PageProps {
   params: Promise<{ moduleId: string; lessonId: string }>;
@@ -80,6 +81,15 @@ export default async function LessonPage({ params }: PageProps) {
     .eq('user_id', user.id) as any);
 
   const completedLessonIds = new Set(completedLessons?.map((p: any) => p.lesson_id) || []);
+
+  // Get user's activity points
+  const { data: userProfile } = await (supabase
+    .from('profiles')
+    .select('activity_points')
+    .eq('user_id', user.id)
+    .maybeSingle() as any);
+
+  const activityPoints = userProfile?.activity_points || 0;
 
   const lessons = moduleLessons || [];
   const currentIndex = lessons.findIndex((l: any) => l.id === lessonId);
@@ -331,23 +341,15 @@ export default async function LessonPage({ params }: PageProps) {
               )}
 
               {nextLesson ? (
-                <Link href={`/cursos/${moduleId}/${nextLesson.id}`}>
-                  <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-gray-100 hover:border-gray-200 hover:scale-[1.02] rounded-xl">
-                    <CardContent className="p-5">
-                      <div className="flex items-center gap-4">
-                        <div className="flex-1 min-w-0 text-right">
-                          <p className="text-xs text-slate-500 mb-1 font-semibold">Siguiente</p>
-                          <p className="font-bold text-slate-900 line-clamp-1 group-hover:text-blue-600 transition-colors">{nextLesson.title}</p>
-                        </div>
-                        <div
-                          className="p-3 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 group-hover:from-slate-200 group-hover:to-slate-300 transition-all duration-300 group-hover:scale-110 shadow-sm"
-                        >
-                          <ChevronRight className="h-6 w-6 text-slate-700" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+                <NextLessonButton
+                  moduleId={moduleId}
+                  nextLessonId={nextLesson.id}
+                  nextLessonTitle={nextLesson.title}
+                  currentLessonId={lessonId}
+                  isCompleted={isCompleted}
+                  primaryColor={primaryColor}
+                  secondaryColor={secondaryColor}
+                />
               ) : (
                 <Link href="/inicio">
                   <Card className="group hover:shadow-xl transition-all duration-300 cursor-pointer border-2 border-emerald-200 hover:border-emerald-300 hover:scale-[1.02] rounded-xl bg-gradient-to-br from-emerald-50/50 to-green-50/50">
@@ -377,6 +379,7 @@ export default async function LessonPage({ params }: PageProps) {
               moduleId={moduleId}
               currentLessonId={lessonId}
               completedLessonIds={completedLessonIds as Set<string>}
+              activityPoints={activityPoints}
               primaryColor={primaryColor}
               secondaryColor={secondaryColor}
             />

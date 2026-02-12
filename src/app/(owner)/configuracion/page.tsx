@@ -95,7 +95,7 @@ export default function ConfigPage({
               background: `linear-gradient(135deg, ${primaryColor}, ${secondaryColor})`,
             }}
           />
-          <p className="text-muted-foreground">Cargando configuración...</p>
+          <p className="text-slate-600">Cargando configuración...</p>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ export default function ConfigPage({
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] gap-6 p-8">
         <div
-          className="p-6 rounded-3xl shadow-premium-lg"
+          className="p-6 rounded-3xl shadow-lg"
           style={{
             background: `linear-gradient(135deg, ${primaryColor}15 0%, ${secondaryColor}15 100%)`,
           }}
@@ -113,12 +113,12 @@ export default function ConfigPage({
           <Settings className="h-16 w-16" style={{ color: primaryColor }} />
         </div>
         <div className="text-center space-y-2">
-          <h3 className="text-xl font-semibold">No se encontró información de la autoescuela</h3>
-          <p className="text-muted-foreground">Configura tu autoescuela para comenzar</p>
+          <h3 className="text-xl font-semibold text-slate-900">No se encontró información de la autoescuela</h3>
+          <p className="text-slate-600">Configura tu autoescuela para comenzar</p>
         </div>
         <a
           href="/setup"
-          className="px-6 py-3 rounded-full text-white font-semibold shadow-premium hover:shadow-premium-lg transition-all duration-300 hover:scale-105"
+          className="px-6 py-3 rounded-full text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
           style={{
             background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)`,
           }}
@@ -130,25 +130,26 @@ export default function ConfigPage({
   }
 
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-6 animate-fade-in">
       {/* Premium Header */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary/10 via-primary/5 to-secondary/10 p-8 md:p-10 border border-primary/20">
+      <div className="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-8 md:p-10 border border-blue-200/50">
+        <div className="absolute inset-0 bg-grid-slate-900/[0.04] [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
         {/* Animated background pattern */}
-        <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-primary/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-pulse" />
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-secondary/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-pulse" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
 
-        <div className="relative z-10">
-          <div className="space-y-3">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/10 backdrop-blur-sm border border-white/20">
-              <Sparkles className="h-4 w-4 text-primary" />
-              <span className="text-sm font-medium">Personalización</span>
+        <div className="relative">
+          <div className="space-y-2">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/50 backdrop-blur-sm border border-white/20">
+              <Sparkles className="h-4 w-4 text-blue-600" />
+              <span className="text-sm font-medium text-slate-700">Personalización</span>
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
               Configuración
             </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl">
+            <p className="text-base text-slate-600 max-w-2xl">
               Personaliza tu autoescuela con tu identidad única. Ajusta el branding, colores y configuración de tu cuenta.
             </p>
           </div>

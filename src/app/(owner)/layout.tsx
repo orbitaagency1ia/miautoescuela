@@ -47,7 +47,7 @@ export default async function OwnerLayout({
 
   return (
     <SchoolThemeProvider colors={{ primary: primaryColor, secondary: secondaryColor }}>
-      <div className="flex h-screen bg-[#F8F9FB]">
+      <div className="flex h-screen" style={{ background: `linear-gradient(180deg, ${primaryColor}03 0%, white 30%)` }}>
         <OwnerSidebar schoolName={schoolName} />
         <main className="flex-1 overflow-y-auto">
           <div className="p-6 md:p-8">

@@ -54,7 +54,7 @@ export function LessonThumbnail({
   return (
     <div
       className={cn(
-        'relative w-32 h-20 rounded-lg overflow-hidden bg-gray-900 transition-all duration-300',
+        'relative w-32 h-20 rounded-lg overflow-hidden bg-slate-900 transition-all duration-300',
         !isLocked && 'group-hover:scale-105',
         isCurrent && 'ring-2 ring-blue-500 ring-offset-2',
         isLocked && 'opacity-70'
@@ -71,7 +71,7 @@ export function LessonThumbnail({
       {!isLocked && !isCompleted && !isCurrent && (
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
           <div className="p-2 rounded-full bg-white/90 shadow-lg">
-            <Play className="h-4 w-4 text-gray-900 fill-gray-900 ml-0.5" />
+            <Play className="h-4 w-4 text-slate-900 fill-slate-900 ml-0.5" />
           </div>
         </div>
       )}
@@ -86,7 +86,7 @@ export function LessonThumbnail({
 
       {/* Checkmark para completadas */}
       {isCompleted && (
-        <div className="absolute top-1.5 right-1.5 p-1 rounded-full bg-green-500 shadow-lg">
+        <div className="absolute top-1.5 right-1.5 p-1 rounded-full bg-emerald-500 shadow-lg">
           <CheckCircle className="h-3.5 w-3.5 text-white" strokeWidth={3} />
         </div>
       )}

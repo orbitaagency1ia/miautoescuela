@@ -92,7 +92,7 @@ export default async function AdminSchoolDetailPage({
         const existing = lessonProgressMap.get(lp.user_id) || [];
         lessonProgressMap.set(lp.user_id, [
           ...existing,
-          { lessonId: lp.lesson_id, completedAt: lp.completed_at }
+          { lessonId: lp.lessonId, completedAt: lp.completedAt }
         ]);
       });
     }
@@ -152,9 +152,9 @@ export default async function AdminSchoolDetailPage({
     >
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-center gap-4 mb-6">
+        <div className="flex items-center gap-4 mb-6 animate-fade-in">
           <Link href="/admin">
-            <Button variant="ghost" size="sm" className="rounded-full">
+            <Button variant="ghost" size="sm" className="rounded-full hover:bg-slate-100 transition-colors">
               <ArrowLeft className="h-4 w-4 mr-2" />
               Volver
             </Button>
@@ -173,65 +173,56 @@ export default async function AdminSchoolDetailPage({
               Vista detallada de alumnos y actividad
             </p>
           </div>
-          <div className="p-3 rounded-xl" style={{ backgroundColor: `${primaryColor}15` }}>
+          <div className="p-3 rounded-xl shadow-md" style={{ backgroundColor: `${primaryColor}15` }}>
             <Building2 className="h-5 w-5" style={{ color: primaryColor }} />
           </div>
         </div>
 
       {/* School Stats */}
       <div className="grid gap-4 md:grid-cols-4">
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Estudiantes</p>
-              <p className="text-3xl font-bold text-slate-900">{totalStudents}</p>
-              <p className="text-xs text-slate-400">{activeStudents} activos</p>
+        {[
+          { label: 'Estudiantes', value: totalStudents, sublabel: `${activeStudents} activos`, icon: Users, color: 'slate' },
+          { label: 'Nuevos (mes)', value: newThisMonth, sublabel: `+${newThisWeek} esta semana`, icon: TrendingUp, color: 'emerald', textColor: 'emerald-500' },
+          { label: 'Clases Vistas', value: totalLessonsCompleted, sublabel: `${activeThisWeek} activos esta semana`, icon: Video, color: 'violet', textColor: 'violet-500' },
+          { label: 'Tasa Activación', value: `${activationRate}%`, sublabel: 'de estudiantes activos', icon: Activity, color: 'slate' },
+        ].map((stat, idx) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={idx}
+              className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200 animate-fade-in"
+              style={{ animationDelay: `${100 + idx * 75}ms` }}
+            >
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm text-slate-500 mb-1">{stat.label}</p>
+                  <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
+                  <p className={cn('text-xs', stat.textColor ? stat.textColor : 'text-slate-400')}>{stat.sublabel}</p>
+                </div>
+                <div className={cn(
+                  'p-3 rounded-xl',
+                  stat.color === 'emerald' ? 'bg-emerald-50' : stat.color === 'violet' ? 'bg-violet-50' : 'bg-slate-100'
+                )}>
+                  <Icon className={cn(
+                    'h-6 w-6',
+                    stat.color === 'emerald' ? 'text-emerald-600' : stat.color === 'violet' ? 'text-violet-600' : 'text-slate-400'
+                  )} />
+                </div>
+              </div>
             </div>
-            <Users className="h-8 w-8 text-slate-400" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Nuevos (mes)</p>
-              <p className="text-3xl font-bold text-slate-900">{newThisMonth}</p>
-              <p className="text-xs text-emerald-500">+{newThisWeek} esta semana</p>
-            </div>
-            <TrendingUp className="h-8 w-8 text-emerald-500" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Clases Vistas</p>
-              <p className="text-3xl font-bold text-slate-900">{totalLessonsCompleted}</p>
-              <p className="text-xs text-violet-500">{activeThisWeek} activos esta semana</p>
-            </div>
-            <Video className="h-8 w-8 text-violet-500" />
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-sm text-slate-500 mb-1">Tasa Activación</p>
-              <p className="text-3xl font-bold text-slate-900">{activationRate}%</p>
-              <p className="text-xs text-slate-400">de estudiantes activos</p>
-            </div>
-            <Activity className="h-8 w-8 text-slate-400" />
-          </div>
-        </div>
+          );
+        })}
       </div>
 
       {/* Action Buttons */}
-      <SchoolActionsCard />
+      <div className="animate-fade-in" style={{ animationDelay: '400ms' }}>
+        <SchoolActionsCard />
+      </div>
 
       {/* School Configuration & Authentication */}
       <div className="grid gap-6 md:grid-cols-2">
         {/* Configuración General */}
-        <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
+        <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-all duration-200 animate-fade-in" style={{ animationDelay: '500ms' }}>
           <div className="border-b bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-t-2xl">
             <div className="flex items-center gap-2">
               <Settings className="h-5 w-5 text-slate-700" />
@@ -309,7 +300,7 @@ export default async function AdminSchoolDetailPage({
         </div>
 
         {/* Autenticación y Acceso */}
-        <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
+        <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-all duration-200 animate-fade-in" style={{ animationDelay: '600ms' }}>
           <div className="border-b bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-t-2xl">
             <div className="flex items-center gap-2">
               <Key className="h-5 w-5 text-slate-700" />
@@ -385,7 +376,7 @@ export default async function AdminSchoolDetailPage({
 
       {/* Invitaciones Pendientes */}
       {invites && invites.length > 0 && (
-        <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
+        <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-all duration-200 animate-fade-in" style={{ animationDelay: '700ms' }}>
           <div className="border-b bg-gradient-to-r from-slate-50 to-slate-100 p-6 rounded-t-2xl">
             <div className="flex items-center gap-2">
               <Mail className="h-5 w-5 text-amber-600" />
@@ -400,7 +391,8 @@ export default async function AdminSchoolDetailPage({
               {invites.map((invite: any) => (
                 <div
                   key={invite.id}
-                  className="flex items-center gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200"
+                  className="flex items-center gap-4 p-4 rounded-xl bg-amber-50 border border-amber-200 animate-fade-in"
+                  style={{ animationDelay: `${750 + (Math.min(invites.indexOf(invite) * 50, 300))}ms` }}
                 >
                   <div className="p-2 rounded-lg bg-amber-500/10">
                     <Mail className="h-4 w-4 text-amber-600" />
@@ -430,7 +422,7 @@ export default async function AdminSchoolDetailPage({
       )}
 
       {/* Filters */}
-      <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_2px_8px_rgba(0,0,0,0.08)] transition-all duration-200">
+      <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] transition-all duration-200 animate-fade-in" style={{ animationDelay: '800ms' }}>
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">

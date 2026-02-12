@@ -65,11 +65,9 @@ export async function POST(request: NextRequest) {
     if (!profile) {
       // El perfil no existe, crearlo
       await (supabase.from('profiles') as any).insert({
-        id: user.id,
         user_id: user.id,
         full_name: user.user_metadata?.full_name || user.email || '',
         phone: user.user_metadata?.phone || null,
-        activity_points: 0,
       });
     }
 

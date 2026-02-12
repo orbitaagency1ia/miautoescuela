@@ -16,6 +16,7 @@ export type Post = Database['public']['Tables']['posts']['Row'];
 export type Comment = Database['public']['Tables']['comments']['Row'];
 export type ActivityEvent = Database['public']['Tables']['activity_events']['Row'];
 
+
 // Join types
 export type SchoolMemberWithProfile = SchoolMember & {
   profile: Profile;

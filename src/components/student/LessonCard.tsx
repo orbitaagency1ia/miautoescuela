@@ -59,11 +59,11 @@ export function LessonCard({
     <Link href={isLocked ? '#' : `/cursos/${moduleId}/${lessonId}`}>
       <Card
         className={cn(
-          'group relative overflow-hidden transition-all duration-300 border-2',
+          'group relative overflow-hidden rounded-[20px] transition-all duration-300 border-2',
           isLocked && 'opacity-60 cursor-not-allowed',
-          !isLocked && 'hover:shadow-xl hover:scale-[1.02] cursor-pointer',
-          isCurrent && 'shadow-lg ring-2',
-          isCurrent && `ring-[${primaryColor}]`
+          !isLocked && 'hover:shadow-[0_12px_32px_rgba(0,0,0,0.12)] hover:-translate-y-1 cursor-pointer',
+          isCurrent && 'shadow-[0_8px_24px_rgba(0,0,0,0.12)] ring-2',
+          !isCurrent && !isLocked && 'shadow-[0_2px_8px_rgba(0,0,0,0.04)]'
         )}
         style={isCurrent ? {
           borderColor: primaryColor,

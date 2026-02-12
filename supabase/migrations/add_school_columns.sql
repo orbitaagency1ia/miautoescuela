@@ -1,55 +1,28 @@
--- ============================================
--- Añadir columnas faltantes a la tabla schools
--- Ejecutar esto en el SQL Editor de Supabase
--- ============================================
+-- Add missing columns to schools table
 
--- Añadir banner_url si no existe
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'schools' AND column_name = 'banner_url'
-  ) THEN
-    ALTER TABLE schools ADD COLUMN banner_url TEXT;
-  END IF;
-END $$;
+-- Secondary color for branding gradients
+ALTER TABLE schools
+ADD COLUMN IF NOT EXISTS secondary_color VARCHAR(7) DEFAULT '#1E40AF';
 
--- Añadir welcome_message si no existe
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'schools' AND column_name = 'welcome_message'
-  ) THEN
-    ALTER TABLE schools ADD COLUMN welcome_message TEXT;
-  END IF;
-END $$;
+-- Banner URL for hero image
+ALTER TABLE schools
+ADD COLUMN IF NOT EXISTS banner_url TEXT;
 
--- Añadir address si no existe
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'schools' AND column_name = 'address'
-  ) THEN
-    ALTER TABLE schools ADD COLUMN address TEXT;
-  END IF;
-END $$;
+-- Welcome message for students
+ALTER TABLE schools
+ADD COLUMN IF NOT EXISTS welcome_message TEXT;
 
--- Añadir website si no existe
-DO $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns
-    WHERE table_name = 'schools' AND column_name = 'website'
-  ) THEN
-    ALTER TABLE schools ADD COLUMN website TEXT;
-  END IF;
-END $$;
+-- Website URL
+ALTER TABLE schools
+ADD COLUMN IF NOT EXISTS website VARCHAR(255);
 
--- Verificar las columnas añadidas
-SELECT column_name, data_type, is_nullable
-FROM information_schema.columns
-WHERE table_name = 'schools'
-  AND column_name IN ('banner_url', 'welcome_message', 'address', 'website')
-ORDER BY column_name;
+-- Physical address
+ALTER TABLE schools
+ADD COLUMN IF NOT EXISTS address TEXT;
+
+-- Add comments
+COMMENT ON COLUMN schools.secondary_color IS 'Secondary color for gradients and accents';
+COMMENT ON COLUMN schools.banner_url IS 'URL of the banner/hero image for the school';
+COMMENT ON COLUMN schools.welcome_message IS 'Custom welcome message shown to students';
+COMMENT ON COLUMN schools.website IS 'School website URL';
+COMMENT ON COLUMN schools.address IS 'Physical address of the school';

@@ -5,6 +5,7 @@ import { CheckCircle, Circle, Loader2, Sparkles } from 'lucide-react';
 import { useState, useTransition } from 'react';
 import { markLessonCompleteAction } from '@/actions/content';
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface PremiumMarkCompleteButtonProps {
   lessonId: string;
@@ -24,18 +25,28 @@ export function PremiumMarkCompleteButton({
   const [completed, setCompleted] = useState(isCompleted);
   const [isPending, startTransition] = useTransition();
   const [showCelebration, setShowCelebration] = useState(false);
+  const router = useRouter();
 
   function handleClick() {
     startTransition(async () => {
       try {
+        // Mark as complete/incomplete and wait for result
         await markLessonCompleteAction(lessonId);
+
+        // If marking as complete (was not completed before)
         if (!completed) {
           setShowCelebration(true);
           setTimeout(() => setShowCelebration(false), 2000);
         }
+
+        // Update local state
         setCompleted(!completed);
+
+        // Refresh the current route to update server state
+        router.refresh();
       } catch (error) {
         console.error('Error marking lesson complete:', error);
+        // Don't update state if there was an error
       }
     });
   }
@@ -47,9 +58,9 @@ export function PremiumMarkCompleteButton({
         disabled={isPending}
         size="lg"
         className={cn(
-          'min-w-[220px] h-14 rounded-2xl font-bold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 relative overflow-hidden',
+          'group min-w-[220px] h-14 rounded-2xl font-bold text-base shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 relative overflow-hidden',
           completed
-            ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white border-0'
+            ? 'bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-600 hover:to-green-700 text-white border-0'
             : 'text-white border-0'
         )}
         style={!completed ? {

@@ -298,15 +298,124 @@ export async function toggleLessonPublishAction(lessonId: string, currentState: 
 
 /**
  * Mark Lesson Complete Action
- * Marcar una clase como completada
- * TEMPORAL: Sin autenticación - no funcional por ahora
+ * Marcar una clase como completada por un estudiante
  */
 export async function markLessonCompleteAction(lessonId: string) {
   'use server';
 
-  // TEMPORAL: No funcional sin autenticación
-  console.log('TEMPORAL: markLessonCompleteAction no disponible sin autenticación');
+  const supabase = await createClient();
 
+  // Get authenticated user
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error('No autenticado');
+  }
+
+  // Get user's school membership
+  const { data: membership } = await (supabase
+    .from('school_members')
+    .select('school_id')
+    .eq('user_id', user.id)
+    .eq('status', 'active')
+    .maybeSingle() as any);
+
+  if (!membership) {
+    throw new Error('No tienes membresía activa en ninguna autoescuela');
+  }
+
+  // Get lesson details to verify it belongs to user's school and get module_id
+  const { data: lesson } = await (supabase
+    .from('lessons')
+    .select('school_id, module_id')
+    .eq('id', lessonId)
+    .single() as any);
+
+  if (!lesson) {
+    throw new Error('Lección no encontrada');
+  }
+
+  if (lesson.school_id !== membership.school_id) {
+    throw new Error('No tienes acceso a esta lección');
+  }
+
+  // Ensure profile exists (for users registered before profile creation)
+  const { data: existingProfile } = await (supabase
+    .from('profiles')
+    .select('user_id, activity_points')
+    .eq('user_id', user.id)
+    .maybeSingle() as any);
+
+  if (!existingProfile) {
+    // Create profile if it doesn't exist
+    await (supabase.from('profiles') as any)
+      .insert({
+        user_id: user.id,
+        full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
+        activity_points: 0,
+      });
+  }
+
+  // Check if already completed
+  const { data: existingProgress } = await (supabase
+    .from('lesson_progress')
+    .select('*')
+    .eq('user_id', user.id)
+    .eq('lesson_id', lessonId)
+    .maybeSingle() as any);
+
+  if (existingProgress) {
+    // Already completed, remove progress (toggle off)
+    const { error: deleteError } = await (supabase
+      .from('lesson_progress')
+      .delete()
+      .eq('user_id', user.id)
+      .eq('lesson_id', lessonId) as any);
+
+    if (deleteError) {
+      console.error('Error removing lesson progress:', deleteError);
+      throw new Error('Error al actualizar progreso');
+    }
+
+    // Remove activity points (10 points per lesson)
+    const currentPoints = existingProfile?.activity_points || 0;
+    await (supabase.from('profiles') as any)
+      .update({
+        activity_points: Math.max(0, currentPoints - 10)
+      })
+      .eq('user_id', user.id);
+  } else {
+    // Not completed, add progress (toggle on)
+    const { error: insertError } = await (supabase
+      .from('lesson_progress') as any)
+      .insert({
+        school_id: lesson.school_id,
+        user_id: user.id,
+        lesson_id: lessonId,
+        progress_percent: 100,
+        completed_at: new Date().toISOString(),
+      });
+
+    if (insertError) {
+      console.error('Error marking lesson complete:', insertError);
+      throw new Error('Error al marcar lección como completada');
+    }
+
+    // Award activity points (10 points per lesson)
+    const currentPoints = existingProfile?.activity_points || 0;
+    await (supabase.from('profiles') as any)
+      .update({
+        activity_points: currentPoints + 10
+      })
+      .eq('user_id', user.id);
+  }
+
+  // Revalidate all relevant paths
   revalidatePath('/inicio');
   revalidatePath('/cursos');
+  revalidatePath(`/cursos/${lesson.module_id}`);
+  revalidatePath(`/cursos/${lesson.module_id}/${lessonId}`);
+  revalidatePath('/ranking');
 }

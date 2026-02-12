@@ -5,7 +5,8 @@ dotenv.config({ path: '.env.local' });
 const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!);
 
 async function main() {
-  const newEmail = 'brainrotini26@gmail.com';
+  const timestamp = Date.now();
+  const newEmail = `owner${timestamp}@test.com`;
   const tempPassword = 'TempPass123!';
 
   // Obtener TerranovaAI
@@ -19,25 +20,54 @@ async function main() {
     console.log('No encontré TerranovaAI');
     return;
   }
+  console.log('Escuela encontrada:', school.name, '(ID:', school.id + ')');
 
-  // Crear usuario
+  // Crear usuario en auth
   const { data, error: createError } = await supabase.auth.admin.createUser({
     email: newEmail,
     password: tempPassword,
     email_confirm: true,
-    user_metadata: { full_name: 'Brain Rotini' },
+    user_metadata: { full_name: 'Test Owner' },
   });
 
   if (createError) {
-    console.log('Error creando usuario:', createError.message);
+    console.log('Error creando usuario en auth:', createError.message);
+    console.log('Detalles:', createError);
     return;
   }
 
   const userId = data.user.id;
-  console.log('Usuario creado:', newEmail);
+  console.log('Usuario creado en auth:', newEmail);
   console.log('User ID:', userId);
 
+  // Verificar que el usuario existe en auth.users
+  const { data: authUser, error: authCheckError } = await supabase.auth.admin.getUserById(userId);
+  if (authCheckError) {
+    console.log('Error verificando usuario en auth:', authCheckError.message);
+  } else {
+    console.log('Usuario verificado en auth.users:', authUser.user?.email);
+  }
+
+  // Crear perfil
+  console.log('Creando perfil...');
+  const { error: profileError } = await supabase.from('profiles').insert({
+    id: userId,
+    user_id: userId,
+    full_name: 'Test Owner',
+    phone: null,
+    activity_points: 0,
+  });
+
+  if (profileError) {
+    console.log('Error creando perfil:', profileError.message);
+    console.log('Detalles:', profileError);
+    return;
+  }
+
+  console.log('Perfil creado correctamente');
+
   // Eliminar owner anterior
+  console.log('Eliminando owners anteriores...');
   await supabase
     .from('school_members')
     .delete()
@@ -45,6 +75,7 @@ async function main() {
     .eq('role', 'owner');
 
   // Crear nuevo owner
+  console.log('Creando nueva membresía de owner...');
   const { error: insertError } = await supabase.from('school_members').insert({
     school_id: school.id,
     user_id: userId,
@@ -54,6 +85,7 @@ async function main() {
 
   if (insertError) {
     console.log('Error creando owner:', insertError.message);
+    console.log('Detalles:', insertError);
     return;
   }
 

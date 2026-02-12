@@ -121,7 +121,7 @@ export default async function AdminDashboard({
       description: 'Total registradas',
       icon: Building2,
       color: 'from-blue-500 to-blue-600',
-      bg: 'bg-blue-500/10',
+      bg: 'bg-blue-50',
     },
     {
       title: 'Estudiantes',
@@ -130,7 +130,7 @@ export default async function AdminDashboard({
       description: `${activeStudents} activos`,
       icon: Users,
       color: 'from-emerald-500 to-emerald-600',
-      bg: 'bg-emerald-500/10',
+      bg: 'bg-emerald-50',
     },
     {
       title: 'Clases Vistas',
@@ -139,7 +139,7 @@ export default async function AdminDashboard({
       description: `${totalActiveThisWeek} activos esta semana`,
       icon: Video,
       color: 'from-violet-500 to-violet-600',
-      bg: 'bg-violet-500/10',
+      bg: 'bg-violet-50',
     },
     {
       title: 'Ingresos',
@@ -148,7 +148,7 @@ export default async function AdminDashboard({
       description: `${activeSubscriptions} suscripciones`,
       icon: CreditCard,
       color: 'from-amber-500 to-amber-600',
-      bg: 'bg-amber-500/10',
+      bg: 'bg-amber-50',
     },
   ];
 
@@ -159,52 +159,61 @@ export default async function AdminDashboard({
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">
-              Panel de Administración
-            </h1>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
-              <Sparkles className="h-3.5 w-3.5 text-blue-600" />
-              <span className="text-xs font-medium text-blue-600">Admin</span>
-            </div>
-          </div>
-          <p className="text-slate-500 mt-2">
-            Monitorea todas las autoescuelas y actividad en tiempo real
-          </p>
+      {/* Premium Header */}
+      <div className="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 border border-slate-200/50">
+        <div className="absolute inset-0 bg-grid-slate-900/[0.04] [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+        <div className="absolute inset-0 opacity-20">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-pulse" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
-        <div className="flex items-center gap-3">
-          <Badge className="bg-emerald-500/10 text-emerald-600 border-emerald-500/20">
-            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2" />
-            Sistema Online
-          </Badge>
+        <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <div className="flex items-center gap-3 mb-3">
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900">
+                Panel de Administración
+              </h1>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-blue-500/10 to-indigo-500/10 border border-blue-500/20">
+                <Sparkles className="h-3.5 w-3.5 text-blue-600" />
+                <span className="text-xs font-medium text-blue-600">Admin</span>
+              </div>
+            </div>
+            <p className="text-slate-600">
+              Monitorea todas las autoescuelas y actividad en tiempo real
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <Badge className="bg-emerald-50 text-emerald-600 border-emerald-200 px-4 py-2">
+              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse mr-2" />
+              Sistema Online
+            </Badge>
+          </div>
         </div>
       </div>
 
       {/* Global Stats */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {globalStats.map((stat, index) => {
           const Icon = stat.icon;
           const isPositive = stat.growth >= 0;
           return (
-            <div key={index} className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200">
-              <div className="relative flex items-start justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-slate-500 mb-2">{stat.title}</p>
-                  <p className="text-3xl font-bold text-slate-900">{stat.value}</p>
-                  <p className="text-xs text-slate-400 mt-1">{stat.description}</p>
-                </div>
-                <div className={cn('p-3 rounded-xl', stat.bg)}>
-                  <Icon className={cn('h-6 w-6 bg-gradient-to-br bg-clip-text text-transparent', stat.color)} />
+            <div key={index} className="group relative overflow-hidden rounded-[20px] bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 animate-fade-in select-none" style={{ animationDelay: `${100 + index * 75}ms` }}>
+              <div className="relative flex flex-col h-full">
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex-1">
+                    <p className="text-base font-semibold text-slate-700 mb-2">{stat.title}</p>
+                    <p className="text-5xl font-bold text-slate-900 leading-none mb-1">{stat.value}</p>
+                    <p className="text-sm text-slate-500">{stat.description}</p>
+                  </div>
+                  <div className={`w-14 h-14 rounded-2xl ${stat.bg} flex items-center justify-center flex-shrink-0`}>
+                    <Icon className={`h-6 w-6 bg-gradient-to-br bg-clip-text text-transparent ${stat.color}`} />
+                  </div>
                 </div>
                 {stat.growth !== 0 && (
                   <div className={cn(
-                    'flex items-center gap-1 text-xs font-medium',
-                    isPositive ? 'text-emerald-500' : 'text-red-500'
+                    'flex items-center gap-1 text-sm font-semibold',
+                    isPositive ? 'text-emerald-600' : 'text-red-600'
                   )}>
-                    {isPositive ? <TrendingUp className="h-3 w-3" /> : <Activity className="h-3 w-3" />}
+                    {isPositive ? <TrendingUp className="h-4 w-4" /> : <Activity className="h-4 w-4" />}
                     {Math.abs(stat.growth)}%
                   </div>
                 )}
@@ -215,7 +224,7 @@ export default async function AdminDashboard({
       </div>
 
       {/* Schools Table */}
-      <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="bg-white rounded-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in" style={{ animationDelay: '400ms' }}>
         <div className="border-b bg-gradient-to-r from-slate-50 to-slate-100 p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -252,10 +261,11 @@ export default async function AdminDashboard({
               {filteredSchools.map((school: any, index) => (
                 <tr
                   key={school.id}
-                  className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group"
+                  className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group animate-fade-in"
+                  style={{ animationDelay: `${500 + Math.min(index * 50, 300)}ms` }}
                 >
                   <td className="p-4">
-                    <div className="flex items-center gap-3">
+                    <Link href={`/admin/autoescuelas/${school.id}`} className="flex items-center gap-3">
                       {school.logo_url ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
@@ -274,16 +284,20 @@ export default async function AdminDashboard({
                         </div>
                       )}
                       <div>
-                        <p className="font-medium text-slate-900">{school.name}</p>
+                        <p className="font-medium text-slate-900 group-hover:text-blue-600 transition-colors">{school.name}</p>
                         <p className="text-xs text-slate-500">{format(new Date(school.created_at), 'dd MMM yyyy', { locale: es })}</p>
                       </div>
-                    </div>
+                    </Link>
                   </td>
                   <td className="p-4 text-center">
-                    <span className="font-semibold text-slate-900">{school.stats.studentCount}</span>
+                    <Link href={`/admin/autoescuelas/${school.id}`} className="font-semibold text-slate-900 group-hover:text-blue-600 transition-colors">
+                      {school.stats.studentCount}
+                    </Link>
                   </td>
                   <td className="p-4 text-center">
-                    <span className="font-semibold text-emerald-600">{school.stats.activeStudentCount}</span>
+                    <Link href={`/admin/autoescuelas/${school.id}`} className="font-semibold text-emerald-600 group-hover:text-blue-600 transition-colors">
+                      {school.stats.activeStudentCount}
+                    </Link>
                   </td>
                   <td className="p-4 text-center text-slate-600">{school.stats.modulesCount}</td>
                   <td className="p-4 text-center text-slate-600">{school.stats.lessonsCount}</td>
@@ -301,8 +315,8 @@ export default async function AdminDashboard({
                       variant={school.subscription_status === 'active' ? 'default' : 'secondary'}
                       className={cn(
                         school.subscription_status === 'active'
-                          ? 'bg-blue-500/10 text-blue-600 border-blue-500/20'
-                          : 'bg-amber-500/10 text-amber-600 border-amber-500/20'
+                          ? 'bg-blue-50 text-blue-600 border-blue-200'
+                          : 'bg-amber-50 text-amber-600 border-amber-200'
                       )}
                     >
                       {school.subscription_status === 'active' ? 'Activo' : school.subscription_status === 'trialing' ? 'Prueba' : school.subscription_status}
@@ -328,84 +342,85 @@ export default async function AdminDashboard({
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-3">
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200">
-          <div className="border-b pb-4 mb-4">
-            <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-              <Users className="h-5 w-5 text-emerald-500" />
-              Estudiantes
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Total</span>
-              <span className="font-bold text-slate-900">{totalStudents}</span>
+      <div className="grid gap-5 md:grid-cols-3">
+        {[
+          { title: 'Estudiantes', icon: Users, color: 'emerald', stats: { total: totalStudents, active: activeStudents, rate: `${totalStudents > 0 ? Math.round((activeStudents / totalStudents) * 100) : 0}%` } },
+          { title: 'Contenido', icon: Video, color: 'violet', stats: { modules: totalModules, lessons: totalLessons, completed: totalLessonsCompleted } },
+          { title: 'Suscripciones', icon: CreditCard, color: 'amber', stats: { active: activeSubscriptions, trial: trialSchools, mrr: `€${activeSubscriptions > 0 ? (activeSubscriptions * 29).toFixed(0) : '0'}` } },
+        ].map((stat, idx) => {
+          const Icon = stat.icon;
+          return (
+            <div key={idx} className="bg-white rounded-[20px] p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 animate-fade-in" style={{ animationDelay: `${600 + idx * 100}ms` }}>
+              <div className="border-b border-slate-100 pb-4 mb-5">
+                <h3 className="flex items-center gap-3 font-semibold text-slate-900 text-lg">
+                  <div className={`w-12 h-12 rounded-xl bg-${stat.color}-50 flex items-center justify-center`}>
+                    <Icon className={`h-6 w-6 text-${stat.color}-500`} />
+                  </div>
+                  {stat.title}
+                </h3>
+              </div>
+              <div className="space-y-4">
+                {idx === 0 && (
+                  <>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                      <span className="text-sm text-slate-600 font-medium">Total</span>
+                      <span className="text-xl font-bold text-slate-900">{stat.stats.total}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50">
+                      <span className="text-sm text-slate-600 font-medium">Activos</span>
+                      <span className="text-xl font-bold text-emerald-600">{stat.stats.active}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                      <span className="text-sm text-slate-600 font-medium">Tasa Activación</span>
+                      <span className="text-xl font-bold text-slate-900">{stat.stats.rate}</span>
+                    </div>
+                  </>
+                )}
+                {idx === 1 && (
+                  <>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                      <span className="text-sm text-slate-600 font-medium">Temas Totales</span>
+                      <span className="text-xl font-bold text-slate-900">{stat.stats.modules}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                      <span className="text-sm text-slate-600 font-medium">Clases Totales</span>
+                      <span className="text-xl font-bold text-slate-900">{stat.stats.lessons}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-violet-50">
+                      <span className="text-sm text-slate-600 font-medium">Clases Vistas</span>
+                      <span className="text-xl font-bold text-violet-600">{stat.stats.completed}</span>
+                    </div>
+                  </>
+                )}
+                {idx === 2 && (
+                  <>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50">
+                      <span className="text-sm text-slate-600 font-medium">Activas</span>
+                      <span className="text-xl font-bold text-emerald-600">{stat.stats.active}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50">
+                      <span className="text-sm text-slate-600 font-medium">En Prueba</span>
+                      <span className="text-xl font-bold text-amber-600">{stat.stats.trial}</span>
+                    </div>
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                      <span className="text-sm text-slate-600 font-medium">Ingresos (MRR)</span>
+                      <span className="text-xl font-bold text-slate-900">{stat.stats.mrr}</span>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Activos</span>
-              <span className="font-bold text-emerald-600">{activeStudents}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Tasa Activación</span>
-              <span className="font-bold text-slate-900">
-                {totalStudents > 0 ? Math.round((activeStudents / totalStudents) * 100) : 0}%
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200">
-          <div className="border-b pb-4 mb-4">
-            <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-              <Video className="h-5 w-5 text-violet-500" />
-              Contenido
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Temas Totales</span>
-              <span className="font-bold text-slate-900">{totalModules}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Clases Totales</span>
-              <span className="font-bold text-slate-900">{totalLessons}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Clases Vistas</span>
-              <span className="font-bold text-violet-600">{totalLessonsCompleted}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 transition-all duration-200">
-          <div className="border-b pb-4 mb-4">
-            <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-              <CreditCard className="h-5 w-5 text-amber-500" />
-              Suscripciones
-            </h3>
-          </div>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Activas</span>
-              <span className="font-bold text-emerald-600">{activeSubscriptions}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">En Prueba</span>
-              <span className="font-bold text-amber-600">{trialSchools}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-500">Ingresos (MRR)</span>
-              <span className="font-bold text-slate-900">€{activeSubscriptions > 0 ? (activeSubscriptions * 29).toFixed(0) : '0'}</span>
-            </div>
-          </div>
-        </div>
+          );
+        })}
       </div>
 
       {/* Recent Activity */}
-      <div className="bg-white rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden">
+      <div className="bg-white rounded-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden animate-fade-in" style={{ animationDelay: '900ms' }}>
         <div className="border-b bg-gradient-to-r from-slate-50 to-slate-100 p-6">
-          <h3 className="flex items-center gap-2 font-semibold text-slate-900">
-            <Clock className="h-5 w-5 text-slate-700" />
+          <h3 className="flex items-center gap-3 font-semibold text-slate-900 text-lg">
+            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center">
+              <Clock className="h-5 w-5 text-slate-600" />
+            </div>
             Actividad Reciente
           </h3>
         </div>
@@ -415,24 +430,25 @@ export default async function AdminDashboard({
               recentActivity.map((activity: any, index: number) => (
                 <div
                   key={index}
-                  className="flex items-center gap-4 p-3 rounded-xl hover:bg-slate-50 transition-colors"
+                  className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors animate-fade-in cursor-pointer border border-transparent hover:border-slate-200"
+                  style={{ animationDelay: `${950 + Math.min(index * 50, 200)}ms` }}
                 >
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shadow-md">
                     {(activity.schools?.name || 'NA').slice(0, 2).toUpperCase()}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-slate-900">{activity.schools?.name || 'Autoescuela'}</p>
+                    <p className="text-sm font-semibold text-slate-900">{activity.schools?.name || 'Autoescuela'}</p>
                     <p className="text-xs text-slate-500">
                       {activity.created_at && format(new Date(activity.created_at), 'dd MMM yyyy, HH:mm', { locale: es })}
                     </p>
                   </div>
-                  <Badge className="bg-blue-500/10 text-blue-600 border-blue-500/20">
+                  <Badge className="bg-blue-50 text-blue-600 border-blue-200">
                     Nuevo Registro
                   </Badge>
                 </div>
               ))
             ) : (
-              <div className="text-center py-8 text-slate-400">
+              <div className="text-center py-12 text-slate-400">
                 <Clock className="h-12 w-12 mx-auto mb-3 opacity-50" />
                 <p>Sin actividad reciente</p>
               </div>

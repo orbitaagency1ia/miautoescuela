@@ -172,12 +172,12 @@ export function VideoUploadDialog({
           throw new Error('No autenticado');
         }
 
-        const { data: membership } = await supabase
+        const { data: membership } = await (supabase
           .from('school_members')
           .select('school_id')
           .eq('user_id', user.id)
           .eq('status', 'active')
-          .single();
+          .single() as any);
 
         if (!membership) {
           throw new Error('No tienes acceso a ninguna autoescuela');
@@ -445,7 +445,7 @@ export function VideoUploadDialog({
               </Button>
               <Button
                 type="submit"
-                disabled={loading || !videoFile}
+                disabled={loading || (!videoFile && !uploadedPath)}
                 className="rounded-full px-6 h-11 bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 shadow-md disabled:opacity-50"
               >
                 {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}

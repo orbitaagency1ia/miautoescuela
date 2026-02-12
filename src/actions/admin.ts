@@ -84,9 +84,8 @@ export async function createSchoolAction(formData: FormData) {
     throw new Error(TOAST_MESSAGES.ERROR_GENERIC);
   }
 
-  // Create profile (using id as primary key)
+  // Create profile (using user_id as primary key)
   const { error: profileError } = await (supabase.from('profiles') as any).insert({
-    id: authData.user.id,
     user_id: authData.user.id,
     full_name: ownerName,
   });

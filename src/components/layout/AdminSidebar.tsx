@@ -48,56 +48,65 @@ export function AdminSidebar() {
   };
 
   return (
-    <div className="flex h-full w-64 flex-col border-r bg-card">
-      {/* Logo with Admin Branding */}
-      <div className="flex h-16 items-center border-b px-4 relative overflow-hidden">
-        {/* Gradient accent */}
-        <div className="absolute bottom-0 left-0 right-0 h-0.5 gradient-primary" />
-
+    <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200/60 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
+      {/* Logo with Admin Branding - Premium Style */}
+      <div className="flex h-16 items-center px-5 border-b border-gray-200/60">
         <Link href="/admin" className="flex items-center gap-3 group flex-1">
           <div className="relative">
-            <div className="absolute inset-0 gradient-primary rounded-xl blur-lg opacity-30 group-hover:opacity-50 transition-opacity" />
-            <div className="relative p-2 gradient-primary rounded-xl ring-2 ring-primary/20 group-hover:ring-primary/40 transition-all">
+            <div
+              className="absolute inset-0 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity"
+              style={{ background: 'linear-gradient(135deg, #64748b 0%, #475569 100%)' }}
+            />
+            <div
+              className="relative p-2.5 rounded-2xl shadow-lg transition-all duration-300 group-hover:scale-105"
+              style={{ background: 'linear-gradient(135deg, #64748b 0%, #475569 100%)' }}
+            >
               <Shield className="h-5 w-5 text-white" />
             </div>
           </div>
           <div className="flex flex-col">
-            <span className="text-base font-bold leading-none">mIAutoescuela</span>
-            <span className="text-xs text-muted-foreground">Administración</span>
+            <span className="text-base font-bold leading-none text-gray-900">mIAutoescuela</span>
+            <span className="text-xs text-gray-500">Administración</span>
           </div>
         </Link>
 
         {/* Status Indicator */}
-        <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-500/10">
+        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-green-50 border border-green-200">
           <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
           <span className="text-xs font-medium text-green-600">{systemStatus}</span>
         </div>
       </div>
 
-      {/* System Stats Card */}
+      {/* System Stats Card - Premium Style */}
       {!isLoading && (
-        <div className="px-4 py-3 border-b bg-gradient-to-r from-primary/5 to-secondary/5">
-          <div className="p-3 rounded-xl bg-primary/5 border border-primary/10">
-            <div className="flex items-center gap-2 mb-2">
-              <Activity className="h-4 w-4 text-primary" />
-              <span className="text-xs font-medium">Estado del Sistema</span>
+        <div className="px-4 py-4 border-b border-gray-200/60">
+          <div
+            className="p-4 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
+            style={{
+              background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+              borderColor: '#cbd5e1'
+            }}
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <Activity className="h-4 w-4 text-slate-600" />
+              <span className="text-xs font-semibold text-gray-700">Estado del Sistema</span>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">API</span>
-                <span className="text-green-500 font-medium">99.9%</span>
+            <div className="grid grid-cols-2 gap-3 text-xs">
+              <div className="flex flex-col">
+                <span className="text-gray-500">API</span>
+                <span className="text-green-600 font-bold">99.9%</span>
               </div>
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">DB</span>
-                <span className="text-green-500 font-medium">OK</span>
+              <div className="flex flex-col">
+                <span className="text-gray-500">DB</span>
+                <span className="text-green-600 font-bold">OK</span>
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Navigation */}
-      <nav className="flex-1 space-y-1 p-3 overflow-y-auto">
+      {/* Navigation - Premium Style */}
+      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         {sidebarItems.map((item) => {
           const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
           const Icon = item.icon;
@@ -109,25 +118,25 @@ export function AdminSidebar() {
             >
               <div
                 className={cn(
-                  'flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200',
+                  'flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-200',
                   isActive
                     ? 'shadow-sm'
-                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                    : 'text-gray-600 hover:bg-gray-50'
                 )}
                 style={isActive ? {
-                  backgroundColor: 'rgba(59, 130, 246, 0.15)',
-                  color: '#3B82F6'
+                  background: 'linear-gradient(135deg, rgba(100, 116, 139, 0.15) 0%, rgba(71, 85, 105, 0.15) 100%)',
+                  color: '#475569'
                 } : {}}
               >
-                <Icon className="h-4 w-4 flex-shrink-0" />
+                <Icon className="h-5 w-5 flex-shrink-0" />
                 <span className="truncate">{item.label}</span>
                 {item.badge && (
-                  <span className="ml-auto px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-xs">
+                  <span className="ml-auto px-2 py-0.5 rounded-full bg-blue-500 text-white text-xs">
                     {item.badge}
                   </span>
                 )}
                 {isActive && (
-                  <div className="ml-auto w-1.5 h-1.5 rounded-full animate-pulse bg-primary" />
+                  <div className="ml-auto w-2 h-2 rounded-full shadow-sm animate-pulse bg-slate-500" />
                 )}
               </div>
             </Link>
@@ -135,25 +144,31 @@ export function AdminSidebar() {
         })}
       </nav>
 
-      {/* User section */}
-      <div className="border-t p-4">
+      {/* User section - Premium Style */}
+      <div className="border-t border-gray-200/60 p-4 bg-gray-50/50">
         {!isLoading && (
           <>
-            <div className="flex items-center gap-3 mb-3 p-2 rounded-lg hover:bg-muted/50 transition-colors">
+            <div className="flex items-center gap-3 mb-3 p-3 rounded-2xl bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
               <Avatar>
-                <AvatarFallback className="text-sm font-semibold ring-2 ring-primary/20 bg-gradient-to-br from-primary/20 to-primary/40">
+                <AvatarFallback
+                  className="text-sm font-semibold"
+                  style={{
+                    background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+                    color: '#475569'
+                  }}
+                >
                   {userName.slice(0, 2).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{userName}</p>
-                <p className="text-xs text-muted-foreground">Administrador</p>
+                <p className="text-sm font-medium truncate text-gray-900">{userName}</p>
+                <p className="text-xs text-gray-500">Administrador</p>
               </div>
             </div>
             <Button
               variant="ghost"
               size="sm"
-              className="w-full justify-start gap-2 h-9 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+              className="w-full justify-start gap-2 h-10 rounded-xl text-gray-500 hover:text-red-600 hover:bg-red-50 transition-all duration-200"
               onClick={handleLogout}
             >
               <LogOut className="h-4 w-4" />

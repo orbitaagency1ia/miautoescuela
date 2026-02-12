@@ -2,100 +2,80 @@
 
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
 
 export function CTASection() {
+  const trustElements = [
+    { icon: CheckCircle, text: 'Sin tarjeta de crédito' },
+    { icon: CheckCircle, text: 'Configuración en 5 minutos' },
+    { icon: CheckCircle, text: 'Soporte 24/7' },
+  ];
+
   return (
-    <section
-      style={{
-        fontFamily: '-apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif',
-        backgroundColor: '#FFFFFF',
-      }}
-      className="py-40 px-6"
-    >
-      <div className="max-w-5xl mx-auto text-center">
+    <section className="relative py-24 px-6 bg-white">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl translate-y-1/2" />
+        <div className="absolute top-0 right-1/4 w-64 h-64 bg-indigo-500/20 rounded-full blur-3xl -translate-y-1/2" />
+      </div>
+
+      <div className="max-w-5xl mx-auto text-center relative z-10">
+        {/* Badge */}
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 mb-8">
+          <Sparkles className="h-4 w-4 text-blue-600" />
+          <span className="text-sm font-semibold text-blue-700">EMPIEZA HOY MISMO</span>
+        </div>
+
         {/* Main Headline */}
-        <h2
-          className="text-5xl sm:text-6xl lg:text-7xl font-semibold tracking-tight mb-8 leading-[1.1]"
-          style={{ color: '#000000' }}
-        >
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-[1.1] text-slate-900">
           ¿Listo para modernizar
-          <span className="block bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+          <span className="block bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
             tu autoescuela?
           </span>
         </h2>
 
         {/* Subheadline */}
-        <p
-          className="text-2xl max-w-2xl mx-auto mb-16 leading-relaxed"
-          style={{ color: '#1A1A1A' }}
-        >
+        <p className="text-xl max-w-2xl mx-auto mb-12 leading-relaxed text-slate-600">
           Únete a las autoescuelas que ya están transformando su enseñanza.
           <br />
-          <span className="font-semibold" style={{ color: '#000000' }}>
+          <span className="font-semibold text-slate-900">
             Prueba gratis 14 días. Sin compromiso.
           </span>
         </p>
 
         {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-6 justify-center">
+        <div className="flex flex-col sm:flex-row gap-5 justify-center mb-12">
           <Link href="/registro">
             <Button
               size="lg"
-              style={{
-                backgroundColor: '#2563EB',
-                color: '#FFFFFF',
-                padding: '2rem 3rem',
-                borderRadius: '1rem',
-                boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
-              }}
-              className="text-xl font-medium transition-all hover:scale-105 hover:shadow-xl"
+              className="h-16 px-10 rounded-full text-lg font-bold shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/40 hover:scale-105 transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-0"
             >
               Comenzar prueba gratis
-              <ArrowRight className="ml-3 h-6 w-6" />
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </Link>
 
           <Link href="/panel">
             <Button
               size="lg"
-              style={{
-                backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                border: '2px solid #E5E7EB',
-                color: '#1A1A1A',
-                padding: '2rem 3rem',
-                borderRadius: '1rem',
-              }}
-              className="text-xl font-medium transition-all duration-300 hover:scale-105 hover:!bg-white hover:!text-black hover:!border-black"
+              variant="outline"
+              className="h-16 px-10 rounded-full text-lg font-semibold border-2 border-slate-300 bg-white/80 backdrop-blur-sm hover:bg-white hover:border-slate-400 transition-all duration-300 hover:scale-105"
             >
               Ver demo
             </Button>
           </Link>
         </div>
 
-        {/* Trust Elements - Checks verdes brillantes visibles */}
-        <div
-          className="flex flex-wrap items-center justify-center gap-8 mt-16"
-          style={{ color: '#4B5563' }}
-        >
-          <div className="flex items-center gap-2">
-            <svg className="h-5 w-5" style={{ color: '#10B981' }} fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span style={{ color: '#1A1A1A' }}>Sin tarjeta de crédito</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg className="h-5 w-5" style={{ color: '#10B981' }} fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span style={{ color: '#1A1A1A' }}>Configuración en 5 minutos</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <svg className="h-5 w-5" style={{ color: '#10B981' }} fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-            </svg>
-            <span style={{ color: '#1A1A1A' }}>Soporte 24/7</span>
-          </div>
+        {/* Trust Elements */}
+        <div className="flex flex-wrap items-center justify-center gap-8">
+          {trustElements.map((element, index) => {
+            const Icon = element.icon;
+            return (
+              <div key={index} className="flex items-center gap-2 text-slate-600">
+                <Icon className="h-5 w-5 text-emerald-500" />
+                <span className="text-sm font-medium">{element.text}</span>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>

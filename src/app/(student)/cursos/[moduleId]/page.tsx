@@ -114,28 +114,29 @@ export default async function ModulePage({ params }: PageProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-[#F8F9FB]">
-      {/* === HEADER APPLE STYLE === */}
-      <div className="bg-white border-b border-gray-100/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="space-y-5">
+      {/* === HEADER PREMIUM === */}
+      <div className="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-8 border border-blue-200/50 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+        <div className="absolute inset-0 bg-grid-slate-900/[0.04] [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+        <div className="relative">
           {/* Breadcrumb minimalista */}
           <div className="flex items-center gap-2 mb-6">
             <Link href="/inicio">
               <Button
                 variant="ghost"
                 size="sm"
-                className="rounded-lg hover:bg-gray-50 text-gray-500 hover:text-gray-700 font-medium text-sm h-8 px-3"
+                className="rounded-xl hover:bg-white/80 text-slate-600 hover:text-slate-900 font-medium text-sm h-8 px-3 transition-all"
               >
                 <Home className="h-4 w-4 mr-1.5" />
                 Inicio
               </Button>
             </Link>
-            <span className="text-gray-300">/</span>
+            <span className="text-slate-400">/</span>
             <Link href="/cursos">
               <Button
                 variant="ghost"
                 size="sm"
-                className="rounded-lg hover:bg-gray-50 text-gray-500 hover:text-gray-700 font-medium text-sm h-8 px-3"
+                className="rounded-xl hover:bg-white/80 text-slate-600 hover:text-slate-900 font-medium text-sm h-8 px-3 transition-all"
               >
                 <List className="h-4 w-4 mr-1.5" />
                 Cursos
@@ -146,34 +147,34 @@ export default async function ModulePage({ params }: PageProps) {
           {/* Header con título y badge de progreso */}
           <div className="flex items-start justify-between gap-6">
             <div className="flex-1">
-              <h1 className="text-[28px] font-bold text-gray-900 leading-tight mb-2">
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 leading-tight mb-3">
                 {module.title}
               </h1>
               {module.description && (
-                <p className="text-[15px] text-gray-500">
+                <p className="text-base text-slate-600 max-w-2xl">
                   {module.description}
                 </p>
               )}
             </div>
 
-            {/* Badge de progreso estilo Apple */}
+            {/* Badge de progreso estilo premium */}
             <div className="flex-shrink-0">
-              <div className="bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.06)] px-6 py-4 flex items-center gap-4">
+              <div className="bg-white rounded-[20px] shadow-lg px-6 py-4 flex items-center gap-4 border border-blue-100">
                 <div>
-                  <p className="text-xs text-gray-500 font-medium mb-1">Progreso</p>
+                  <p className="text-xs text-slate-500 font-medium mb-1">Progreso</p>
                   <p className="text-3xl font-bold text-blue-600">{progressPercentage}%</p>
                 </div>
-                <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center">
-                  <Trophy className="h-6 w-6 text-blue-600" />
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
+                  <Trophy className="h-7 w-7 text-white" />
                 </div>
               </div>
             </div>
           </div>
 
           {/* Barra de progreso */}
-          <div className="mt-6 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+          <div className="mt-6 h-2 bg-white/60 rounded-full overflow-hidden shadow-inner">
             <div
-              className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-500"
+              className="h-full bg-gradient-to-r from-blue-600 to-indigo-600 rounded-full transition-all duration-500 shadow-sm"
               style={{ width: `${progressPercentage}%` }}
             />
           </div>
@@ -181,94 +182,101 @@ export default async function ModulePage({ params }: PageProps) {
       </div>
 
       {/* === CONTENIDO PRINCIPAL === */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* === STAT CARDS APPLE STYLE === */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-          {statCards.map((stat) => {
-            const Icon = stat.icon;
-            return (
-              <div
-                key={stat.title}
-                className="bg-white rounded-2xl p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.03)]"
-              >
+      {/* === STAT CARDS PREMIUM === */}
+      <div className="grid gap-5 sm:grid-cols-4">
+        {statCards.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={stat.title}
+              className="group relative overflow-hidden rounded-[20px] bg-white p-6 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(0,0,0,0.08)] hover:-translate-y-1 transition-all duration-300 border border-slate-100"
+            >
+              <div className="relative">
                 <div className="flex items-center justify-between mb-3">
-                  <div className={`w-10 h-10 rounded-xl ${stat.bgClass} flex items-center justify-center`}>
-                    <Icon className={`h-5 w-5 ${stat.iconColor}`} />
+                  <div className={`w-14 h-14 rounded-2xl ${stat.bgClass} flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all duration-300`}>
+                    <Icon className={`h-7 w-7 ${stat.iconColor}`} />
                   </div>
                 </div>
-                <p className="text-[28px] font-bold text-gray-900 leading-none mb-1">
+                <p className="text-4xl font-bold text-slate-900 leading-none mb-1">
                   {stat.value}
                 </p>
-                <p className="text-[13px] text-gray-500 font-normal">
+                <p className="text-sm text-slate-500 font-medium">
                   {stat.title}
                 </p>
               </div>
-            );
-          })}
-        </div>
-
-        {/* === LISTA DE CLASES APPLE STYLE === */}
-        <div className="space-y-3">
-          {!lessons || lessons.length === 0 ? (
-            <div className="bg-white rounded-2xl p-12 text-center shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
-              <div className="inline-flex p-4 rounded-2xl bg-blue-50 mb-4">
-                <BookOpen className="h-12 w-12 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                Sin clases disponibles
-              </h3>
-              <p className="text-gray-500">
-                Este tema aún no tiene contenido
-              </p>
             </div>
-          ) : (
-            lessons.map((lesson: any, index: number) => {
-              const isCompleted = completedLessonIds.has(lesson.id);
-              const isLocked = index > firstIncompleteIndex && !isCompleted;
-              const isCurrent = index === firstIncompleteIndex && !isCompleted;
+          );
+        })}
+      </div>
 
-              return (
-                <AppleLessonCard
-                  key={lesson.id}
-                  lessonId={lesson.id}
-                  moduleId={moduleId}
-                  title={lesson.title}
-                  description={lesson.description}
-                  videoPath={lesson.video_path}
-                  orderIndex={index + 1}
-                  isCompleted={isCompleted}
-                  isLocked={isLocked}
-                  isCurrent={isCurrent}
-                />
-              );
-            })
-          )}
-        </div>
-
-        {/* === MODULE COMPLETE REWARD === */}
-        {progressPercentage === 100 && lessons.length > 0 && (
-          <div className="mt-8 bg-gradient-to-r from-amber-500 to-orange-500 rounded-2xl p-8 text-white shadow-xl">
-            <div className="flex items-center justify-between gap-6">
-              <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                  <Trophy className="h-8 w-8" />
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-1">¡Tema Completado! 🎉</h3>
-                  <p className="opacity-90">
-                    Has ganado {lessons.length * 10} puntos. ¡Excelente trabajo!
-                  </p>
-                </div>
-              </div>
-              <Link href="/cursos">
-                <Button className="bg-white text-amber-600 hover:bg-white/90 border-0 shadow-lg px-8 rounded-xl h-12 font-semibold">
-                  Ver más temas
-                </Button>
-              </Link>
+      {/* === HEADER DE CLASES === */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-slate-900">Clases del Tema</h2>
+        <p className="text-sm text-slate-500">{lessons.length} {lessons.length === 1 ? 'clase' : 'clases'}</p>
+      </div>
+      {/* === LISTA DE CLASES PREMIUM === */}
+      <div className="space-y-3">
+        {!lessons || lessons.length === 0 ? (
+          <div className="bg-white rounded-[20px] p-12 text-center shadow-[0_2px_8px_rgba(0,0,0,0.04)] border border-slate-100">
+            <div className="inline-flex p-4 rounded-2xl bg-blue-50 mb-4">
+              <BookOpen className="h-12 w-12 text-blue-600" />
             </div>
+            <h3 className="text-xl font-semibold text-slate-900 mb-2">
+              Sin clases disponibles
+            </h3>
+            <p className="text-slate-500">
+              Este tema aún no tiene contenido
+            </p>
           </div>
+        ) : (
+          lessons.map((lesson: any, index: number) => {
+            const isCompleted = completedLessonIds.has(lesson.id);
+            const isLocked = index > firstIncompleteIndex && !isCompleted;
+            const isCurrent = index === firstIncompleteIndex && !isCompleted;
+
+            return (
+              <AppleLessonCard
+                key={lesson.id}
+                lessonId={lesson.id}
+                moduleId={moduleId}
+                title={lesson.title}
+                description={lesson.description}
+                videoPath={lesson.video_path}
+                orderIndex={index + 1}
+                isCompleted={isCompleted}
+                isLocked={isLocked}
+                isCurrent={isCurrent}
+                cardIndex={index}
+              />
+            );
+          })
         )}
       </div>
+
+      {/* === MODULE COMPLETE REWARD PREMIUM === */}
+      {progressPercentage === 100 && lessons.length > 0 && (
+        <div className="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-amber-500 to-orange-600 p-8 text-white shadow-xl">
+          <div className="absolute inset-0 bg-grid-white/[0.1] [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))]" />
+          <div className="relative flex items-center justify-between gap-6">
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+                <Trophy className="h-8 w-8" />
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold mb-1">¡Tema Completado! 🎉</h3>
+                <p className="opacity-90">
+                  Has ganado {lessons.length * 10} puntos. ¡Excelente trabajo!
+                </p>
+              </div>
+            </div>
+            <Link href="/cursos">
+              <Button className="bg-white text-amber-600 hover:bg-white/90 border-0 shadow-lg px-8 rounded-xl h-12 font-semibold">
+                Ver más temas
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

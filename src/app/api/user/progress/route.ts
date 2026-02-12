@@ -18,7 +18,7 @@ export async function GET() {
       .from('lesson_progress')
       .select('lesson_id')
       .eq('user_id', user.id)
-      .not('completed_at', 'null') as any);
+      .not('completed_at', 'is', null) as any);
 
     if (progressError) {
       console.error('Error fetching progress:', progressError);
@@ -30,7 +30,17 @@ export async function GET() {
 
     const completedLessonIds = completedLessons?.map((p: any) => p.lesson_id) || [];
 
-    return NextResponse.json({ completedLessonIds });
+    // Get activity points from profiles table
+    const { data: profile } = await (supabase
+      .from('profiles')
+      .select('activity_points')
+      .eq('user_id', user.id)
+      .maybeSingle() as any);
+
+    return NextResponse.json({
+      completedLessonIds,
+      activityPoints: profile?.activity_points || 0,
+    });
   } catch (error) {
     console.error('Error fetching progress:', error);
     return NextResponse.json(

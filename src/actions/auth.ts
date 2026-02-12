@@ -70,12 +70,21 @@ export async function loginAction(prevState: FormState, formData: FormData): Pro
     .eq('status', 'active')
     .maybeSingle() as any);
 
+  // Check if user is super admin (email domain check)
+  const userEmail = data.user.email;
+  const isSuperAdmin = userEmail?.endsWith('@miautoescuela.com') ||
+                       userEmail?.endsWith('@admin.com') ||
+                       data.user.user_metadata?.role === 'admin';
+
   revalidatePath('/', 'layout');
 
   // Redirigir según rol
-  if (membership?.role === 'admin') {
+  // Super admins: van a /admin (panel global de todas las escuelas)
+  // Owners: van a /panel (panel de su escuela)
+  // Admins de escuela: van a /panel (panel de su escuela)
+  if (isSuperAdmin) {
     redirect('/admin');
-  } else if (membership?.role === 'owner') {
+  } else if (membership?.role === 'owner' || membership?.role === 'admin') {
     redirect('/panel');
   } else {
     redirect('/inicio');
@@ -151,10 +160,9 @@ export async function registerAction(prevState: FormState, formData: FormData): 
 
   // Crear perfil usando service role (bypasses RLS)
   const { error: profileError } = await (serviceSupabase.from('profiles') as any).insert({
-    id: authData.user.id,
     user_id: authData.user.id,
     full_name: fullName,
-    phone: phone,
+    phone: phone || null,
   });
 
   if (profileError) {
@@ -310,10 +318,9 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
 
   // Create profile using service role (bypasses RLS)
   const { error: profileError } = await (serviceSupabase.from('profiles') as any).insert({
-    id: authData.user.id,
     user_id: authData.user.id,
     full_name: fullName,
-    phone: phone,
+    phone: phone || null,
   });
 
   if (profileError) {

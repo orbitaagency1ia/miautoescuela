@@ -1,15 +1,15 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Upload, Palette, Image as ImageIcon, Type, Layout, CheckCircle2, Loader2, Sparkles, Eye, ChevronDown, Info } from 'lucide-react';
+import { Upload, Palette, Image as ImageIcon, Type, Layout, CheckCircle2, Loader2, Sparkles, Eye, Info } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/components/ui/toaster';
 import { updateSchoolAction, uploadSchoolLogoAction, uploadSchoolBannerAction } from '@/actions/school';
 import { cn } from '@/lib/utils';
 
@@ -23,7 +23,16 @@ const colorPresets = [
   { name: 'Rosa', primary: '#EC4899', secondary: '#DB2777', gradient: 'from-pink-500 to-pink-700' },
   { name: 'Cian', primary: '#06B6D4', secondary: '#0891B2', gradient: 'from-cyan-500 to-cyan-700' },
   { name: 'Índigo', primary: '#6366F1', secondary: '#4F46E5', gradient: 'from-indigo-500 to-indigo-700' },
+  { name: 'Amarillo', primary: '#EAB308', secondary: '#CA8A04', gradient: 'from-yellow-500 to-yellow-700' },
+  { name: 'Lima', primary: '#84CC16', secondary: '#65A30D', gradient: 'from-lime-500 to-lime-700' },
+  { name: 'Teal', primary: '#14B8A6', secondary: '#0D9488', gradient: 'from-teal-500 to-teal-700' },
+  { name: 'Gris', primary: '#6B7280', secondary: '#374151', gradient: 'from-gray-500 to-gray-700' },
 ];
+
+const DEFAULT_COLORS = {
+  primary: '#3B82F6',
+  secondary: '#1E40AF',
+};
 
 interface ConfiguracionFormProps {
   school: {
@@ -255,6 +264,14 @@ export function ConfiguracionForm({ school, onUpdate }: ConfiguracionFormProps) 
     });
   };
 
+  const resetColors = () => {
+    setBrandingData({
+      ...brandingData,
+      primary_color: DEFAULT_COLORS.primary,
+      secondary_color: DEFAULT_COLORS.secondary,
+    });
+  };
+
   return (
     <Tabs defaultValue="general" className="space-y-6">
       <TabsList className="bg-muted/50 p-1.5 rounded-2xl h-auto">
@@ -270,12 +287,6 @@ export function ConfiguracionForm({ school, onUpdate }: ConfiguracionFormProps) 
         >
           <Palette className="mr-2 h-4 w-4" />
           Branding
-        </TabsTrigger>
-        <TabsTrigger
-          value="account"
-          className="rounded-xl data-[state=active]:bg-background data-[state=active]:shadow-sm transition-all duration-200"
-        >
-          Cuenta
         </TabsTrigger>
       </TabsList>
 
@@ -336,7 +347,7 @@ export function ConfiguracionForm({ school, onUpdate }: ConfiguracionFormProps) 
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="website" className="text-sm font-medium">Sitio Web (opcional)</Label>
+                  <Label htmlFor="website" className="text-sm font-medium">Sitio Web</Label>
                   <Input
                     id="website"
                     type="url"
@@ -615,46 +626,49 @@ export function ConfiguracionForm({ school, onUpdate }: ConfiguracionFormProps) 
 
             {/* Presets */}
             <div className="space-y-4">
-              <Label className="text-sm font-medium flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-primary" />
-                Paletas Predefinidas
-              </Label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <div className="flex items-center justify-between">
+                <Label className="text-sm font-medium flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" />
+                  Paletas Predefinidas
+                </Label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={resetColors}
+                  className="text-xs text-muted-foreground hover:text-primary"
+                >
+                  Restablecer
+                </Button>
+              </div>
+              <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-2">
                 {colorPresets.map((preset) => (
                   <button
                     key={preset.name}
                     type="button"
                     onClick={() => applyPreset(preset)}
                     className={cn(
-                      "group relative p-4 rounded-2xl border-2 transition-all duration-300 hover:scale-105 hover:shadow-lg",
+                      "group relative p-3 rounded-xl border-2 transition-all duration-200 hover:scale-105",
                       brandingData.primary_color === preset.primary && brandingData.secondary_color === preset.secondary
-                        ? "border-primary ring-2 ring-primary/20 shadow-lg scale-105"
+                        ? "border-primary ring-2 ring-primary/20 shadow-md"
                         : "border-border/50 hover:border-primary/50"
                     )}
                   >
-                    <div
-                      className={cn(
-                        "absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300",
-                        preset.gradient
-                      )}
-                      style={{ opacity: brandingData.primary_color === preset.primary ? '0.1' : 0 }}
-                    />
-                    <div className="relative flex flex-col items-center gap-3">
-                      <div className="flex gap-2">
+                    <div className="relative flex flex-col items-center gap-2">
+                      <div className="flex gap-1">
                         <div
-                          className="w-8 h-8 rounded-xl shadow-md ring-2 ring-white/50"
+                          className="w-5 h-5 rounded-md shadow-sm"
                           style={{ backgroundColor: preset.primary }}
                         />
                         <div
-                          className="w-8 h-8 rounded-xl shadow-md ring-2 ring-white/50"
+                          className="w-5 h-5 rounded-md shadow-sm"
                           style={{ backgroundColor: preset.secondary }}
                         />
                       </div>
-                      <span className="text-sm font-medium">{preset.name}</span>
+                      <span className="text-xs font-medium">{preset.name}</span>
                     </div>
                     {brandingData.primary_color === preset.primary && brandingData.secondary_color === preset.secondary && (
-                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full flex items-center justify-center">
-                        <CheckCircle2 className="h-4 w-4 text-white" />
+                      <div className="absolute -top-1 -right-1 w-4 h-4 bg-primary rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="h-3 w-3 text-white" />
                       </div>
                     )}
                   </button>

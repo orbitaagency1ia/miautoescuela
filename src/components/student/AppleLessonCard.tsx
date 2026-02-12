@@ -1,6 +1,6 @@
 'use client';
 
-import { Play, CheckCircle, Lock, Clock } from 'lucide-react';
+import { Play, CheckCircle, Lock, Clock, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useState } from 'react';
@@ -15,6 +15,7 @@ interface AppleLessonCardProps {
   isCompleted: boolean;
   isLocked: boolean;
   isCurrent: boolean;
+  cardIndex?: number;
 }
 
 export function AppleLessonCard({
@@ -27,7 +28,9 @@ export function AppleLessonCard({
   isCompleted,
   isLocked,
   isCurrent,
+  cardIndex = 0,
 }: AppleLessonCardProps) {
+  const animationDelay = Math.min(cardIndex * 75, 500);
   const [imageError, setImageError] = useState(false);
 
   // Generar thumbnail URL o usar placeholder
@@ -48,35 +51,42 @@ export function AppleLessonCard({
 
     // Placeholder con gradiente suave
     return {
-      background: 'linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%)',
+      background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%)',
     };
   };
 
   return (
-    <Link href={isLocked ? '#' : `/cursos/${moduleId}/${lessonId}`}>
+    <Link
+      href={isLocked ? '#' : `/cursos/${moduleId}/${lessonId}`}
+      className={cn(
+        'block',
+        isLocked && 'pointer-events-none'
+      )}
+    >
       <div
         className={cn(
-          'relative bg-white rounded-2xl p-5 transition-all duration-200',
-          // Sombras suaves estilo Apple
-          'shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.03)]',
-          'hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] hover:-translate-y-0.5',
+          'relative bg-white rounded-[20px] p-5 transition-all duration-300 animate-fade-in select-none group border-2 border-transparent',
+          // Premium shadow pattern
+          'shadow-[0_2px_8px_rgba(0,0,0,0.04)]',
+          // Premium hover effect
+          'hover:shadow-[0_12px_32px_rgba(59,130,246,0.12)] hover:-translate-y-1 hover:border-blue-200',
           isLocked && 'opacity-55 cursor-not-allowed hover:shadow-none hover:translate-y-0',
-          isCurrent && 'shadow-[0_4px_12px_rgba(59,130,246,0.15)]'
+          isCurrent && 'shadow-[0_4px_12px_rgba(59,130,246,0.15)] border-l-4 border-l-blue-500'
         )}
-        style={isCurrent ? {
-          borderLeft: '3px solid #3B82F6',
-        } : {}}
+        style={{
+          animationDelay: `${animationDelay}ms`,
+        }}
       >
-        <div className="flex gap-4">
-          {/* Thumbnail con estilo Apple */}
+        <div className="flex gap-4 items-center">
+          {/* Thumbnail con estilo premium */}
           <div
-            className="flex-shrink-0 w-48 h-28 rounded-xl overflow-hidden bg-gray-100 relative transition-transform duration-200"
+            className="flex-shrink-0 w-48 h-28 rounded-xl overflow-hidden bg-slate-100 relative transition-transform duration-200"
             style={getThumbnailStyle()}
           >
             {/* Overlay para bloqueadas */}
             {isLocked && (
               <div className="absolute inset-0 bg-black/20 backdrop-blur-[1px] flex items-center justify-center">
-                <Lock className="h-6 w-6 text-gray-400" strokeWidth={1.5} />
+                <Lock className="h-6 w-6 text-slate-400" strokeWidth={1.5} />
               </div>
             )}
 
@@ -100,7 +110,7 @@ export function AppleLessonCard({
 
             {/* Checkmark para completadas */}
             {isCompleted && (
-              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-green-500 shadow-md">
+              <div className="absolute top-2 right-2 p-1.5 rounded-full bg-emerald-500 shadow-md">
                 <CheckCircle className="h-4 w-4 text-white" strokeWidth={3} />
               </div>
             )}
@@ -113,7 +123,7 @@ export function AppleLessonCard({
             )}
 
             {isLocked && (
-              <div className="absolute top-2 left-2 px-2.5 py-1 rounded-lg bg-gray-100 text-gray-500 text-xs font-semibold">
+              <div className="absolute top-2 left-2 px-2.5 py-1 rounded-lg bg-slate-100 text-slate-500 text-xs font-semibold">
                 Bloqueada
               </div>
             )}
@@ -129,18 +139,18 @@ export function AppleLessonCard({
           {/* Contenido */}
           <div className="flex-1 min-w-0 flex flex-col justify-center py-1">
             {/* Número de clase */}
-            <p className="text-xs text-gray-500 font-medium mb-1.5">
+            <p className="text-xs text-slate-500 font-medium mb-1.5">
               Clase {orderIndex}
             </p>
 
             {/* Título */}
-            <h3 className="text-base font-semibold text-gray-900 leading-snug line-clamp-2 mb-2">
+            <h3 className="text-base font-semibold text-slate-900 leading-snug line-clamp-2 mb-2 group-hover:text-blue-600 transition-colors">
               {title}
             </h3>
 
             {/* Descripción (opcional) */}
             {description && (
-              <p className="text-sm text-gray-500 line-clamp-1">
+              <p className="text-sm text-slate-500 line-clamp-1">
                 {description}
               </p>
             )}
@@ -148,12 +158,12 @@ export function AppleLessonCard({
             {/* Estado y puntos */}
             <div className="mt-2">
               {isCompleted ? (
-                <div className="flex items-center gap-1.5 text-sm font-medium text-green-600">
+                <div className="flex items-center gap-1.5 text-sm font-medium text-emerald-600">
                   <CheckCircle className="h-4 w-4" />
                   <span>Completada · +10 puntos</span>
                 </div>
               ) : isLocked ? (
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-slate-400">
                   Completa la clase anterior
                 </p>
               ) : isCurrent ? (
@@ -163,6 +173,13 @@ export function AppleLessonCard({
               ) : null}
             </div>
           </div>
+
+          {/* Chevron indicator */}
+          {!isLocked && (
+            <div className="flex items-center justify-center ml-2 self-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+              <ChevronRight className="h-5 w-5 text-slate-400 group-hover:text-blue-500 transition-colors" />
+            </div>
+          )}
         </div>
       </div>
     </Link>

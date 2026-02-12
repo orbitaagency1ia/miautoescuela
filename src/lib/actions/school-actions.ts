@@ -16,11 +16,12 @@ export async function updateSchool(schoolId: string, data: {
   secondary_color?: string;
 }) {
   const supabase = await createClient();
+  const db = supabase as any;
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('schools')
     .update(data)
-    .eq('id', schoolId) as any);
+    .eq('id', schoolId);
 
   if (error) {
     return { success: false, error: error.message };
@@ -33,13 +34,14 @@ export async function updateSchool(schoolId: string, data: {
 
 export async function toggleSchoolStatus(schoolId: string, currentStatus: string) {
   const supabase = await createClient();
+  const db = supabase as any;
 
   const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('schools')
     .update({ subscription_status: newStatus })
-    .eq('id', schoolId) as any);
+    .eq('id', schoolId);
 
   if (error) {
     return { success: false, error: error.message };
@@ -52,11 +54,12 @@ export async function toggleSchoolStatus(schoolId: string, currentStatus: string
 
 export async function deleteSchool(schoolId: string) {
   const supabase = await createClient();
+  const db = supabase as any;
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('schools')
     .delete()
-    .eq('id', schoolId) as any);
+    .eq('id', schoolId);
 
   if (error) {
     return { success: false, error: error.message };
@@ -70,12 +73,13 @@ export async function deleteSchool(schoolId: string) {
 // Student Actions
 export async function updateStudentStatus(schoolId: string, userId: string, newStatus: 'active' | 'suspended') {
   const supabase = await createClient();
+  const db = supabase as any;
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('school_members')
     .update({ status: newStatus })
     .eq('school_id', schoolId)
-    .eq('user_id', userId) as any);
+    .eq('user_id', userId);
 
   if (error) {
     return { success: false, error: error.message };
@@ -87,12 +91,13 @@ export async function updateStudentStatus(schoolId: string, userId: string, newS
 
 export async function removeStudent(schoolId: string, userId: string) {
   const supabase = await createClient();
+  const db = supabase as any;
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('school_members')
     .delete()
     .eq('school_id', schoolId)
-    .eq('user_id', userId) as any);
+    .eq('user_id', userId);
 
   if (error) {
     return { success: false, error: error.message };
@@ -104,22 +109,23 @@ export async function removeStudent(schoolId: string, userId: string) {
 
 export async function inviteStudent(schoolId: string, email: string, role: string = 'student') {
   const supabase = await createClient();
+  const db = supabase as any;
 
   // Check if email already exists in profiles
-  const { data: existingProfile } = await (supabase
+  const { data: existingProfile } = await db
     .from('profiles')
     .select('id')
     .eq('email', email)
-    .maybeSingle() as any);
+    .maybeSingle();
 
   // Check if already invited
-  const { data: existingInvite } = await (supabase
+  const { data: existingInvite } = await db
     .from('invites')
     .select('*')
     .eq('school_id', schoolId)
     .eq('email', email)
     .eq('accepted', false)
-    .maybeSingle() as any);
+    .maybeSingle();
 
   if (existingInvite) {
     return { success: false, error: 'Ya existe una invitación pendiente para este email' };
@@ -127,7 +133,7 @@ export async function inviteStudent(schoolId: string, email: string, role: strin
 
   // If user exists, add directly to school_members
   if (existingProfile) {
-    const { error: memberError } = await (supabase
+    const { error: memberError } = await db
       .from('school_members')
       .insert({
         school_id: schoolId,
@@ -135,7 +141,7 @@ export async function inviteStudent(schoolId: string, email: string, role: strin
         role: role,
         status: 'active',
         joined_at: new Date().toISOString(),
-      }) as any);
+      });
 
     if (memberError) {
       return { success: false, error: memberError.message };
@@ -149,7 +155,7 @@ export async function inviteStudent(schoolId: string, email: string, role: strin
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7); // 7 days expiry
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('invites')
     .insert({
       school_id: schoolId,
@@ -157,7 +163,7 @@ export async function inviteStudent(schoolId: string, email: string, role: strin
       role,
       accepted: false,
       expires_at: expiresAt.toISOString(),
-    }) as any);
+    });
 
   if (error) {
     return { success: false, error: error.message };
@@ -178,12 +184,13 @@ export async function removeAdmin(schoolId: string, userId: string) {
 
 export async function updateAdminRole(schoolId: string, userId: string, newRole: 'owner' | 'admin') {
   const supabase = await createClient();
+  const db = supabase as any;
 
-  const { error } = await (supabase
+  const { error } = await db
     .from('school_members')
     .update({ role: newRole })
     .eq('school_id', schoolId)
-    .eq('user_id', userId) as any);
+    .eq('user_id', userId);
 
   if (error) {
     return { success: false, error: error.message };

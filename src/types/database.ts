@@ -24,6 +24,11 @@ export interface Database {
           slug: string
           logo_url: string | null
           primary_color: string
+          secondary_color: string
+          banner_url: string | null
+          welcome_message: string | null
+          website: string | null
+          address: string | null
           contact_email: string | null
           phone: string | null
           subscription_status: 'active' | 'trialing' | 'past_due' | 'canceled' | 'incomplete'
@@ -39,6 +44,11 @@ export interface Database {
           slug: string
           logo_url?: string | null
           primary_color?: string
+          secondary_color?: string
+          banner_url?: string | null
+          welcome_message?: string | null
+          website?: string | null
+          address?: string | null
           contact_email?: string | null
           phone?: string | null
           subscription_status?: 'active' | 'trialing' | 'past_due' | 'canceled' | 'incomplete'
@@ -54,6 +64,11 @@ export interface Database {
           slug?: string
           logo_url?: string | null
           primary_color?: string
+          secondary_color?: string
+          banner_url?: string | null
+          welcome_message?: string | null
+          website?: string | null
+          address?: string | null
           contact_email?: string | null
           phone?: string | null
           subscription_status?: 'active' | 'trialing' | 'past_due' | 'canceled' | 'incomplete'
@@ -71,6 +86,7 @@ export interface Database {
           phone: string | null
           avatar_url: string | null
           preferred_language: string
+          activity_points: number
           created_at: string
           updated_at: string
         }
@@ -80,6 +96,7 @@ export interface Database {
           phone?: string | null
           avatar_url?: string | null
           preferred_language?: string
+          activity_points?: number
           created_at?: string
           updated_at?: string
         }
@@ -89,6 +106,7 @@ export interface Database {
           phone?: string | null
           avatar_url?: string | null
           preferred_language?: string
+          activity_points?: number
           created_at?: string
           updated_at?: string
         }
@@ -110,7 +128,7 @@ export interface Database {
           user_id: string
           role: 'admin' | 'owner' | 'student'
           status?: 'active' | 'suspended' | 'removed'
-          invited_by?: string | null
+          invited_by?: string
           joined_at?: string
           created_at?: string
         }
@@ -120,7 +138,7 @@ export interface Database {
           user_id?: string
           role?: 'admin' | 'owner' | 'student'
           status?: 'active' | 'suspended' | 'removed'
-          invited_by?: string | null
+          invited_by?: string
           joined_at?: string
           created_at?: string
         }
@@ -154,7 +172,6 @@ export interface Database {
           email?: string
           role?: 'owner' | 'student'
           token_hash?: string
-          invited_by?: string
           expires_at?: string
           used_at?: string | null
           created_at?: string
