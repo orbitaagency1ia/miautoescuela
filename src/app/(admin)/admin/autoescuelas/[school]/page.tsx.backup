@@ -8,7 +8,6 @@ import { format, subDays, subMonths } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { cn } from '@/lib/utils';
 import { SchoolDetailProvider } from '@/components/admin/SchoolDetailContext';
-import { extendTrialAction } from '@/actions/extend-trial';
 import { SchoolActionsCard } from '@/components/admin/SchoolActionsCard';
 import { StudentsTable } from '@/components/admin/StudentsTable';
 import { AdminsSection } from '@/components/admin/AdminsSection';
@@ -482,6 +481,3 @@ export default async function AdminSchoolDetailPage({
     </SchoolDetailProvider>
   );
 }
-import { extendTrialAction } from '@/actions/extend-trial';
-
-// ... rest of imports ...
