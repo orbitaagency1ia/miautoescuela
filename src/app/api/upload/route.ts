@@ -46,10 +46,10 @@ export async function POST(request: NextRequest) {
     const fileName = `${schoolId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
 
     // Upload to Supabase Storage
-    const { data: uploadData, error: uploadError } = await (supabase
+    const { data: uploadData, error: uploadError } = await supabase
       .storage
       .from('lesson-videos')
-      .upload(fileName, file) as any);
+      .upload(fileName, file);
 
     if (uploadError) {
       console.error('Upload error:', uploadError);

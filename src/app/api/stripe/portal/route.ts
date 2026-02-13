@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get school_id and stripe_customer_id
-    const { data: membership } = await (supabase
+    const { data: membership } = await supabase
       .from('school_members')
       .select(`
         school_id,
@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       `)
       .eq('user_id', user.id)
       .eq('status', 'active')
-      .single() as any);
+      .single();
 
     if (!membership || !membership.schools?.stripe_customer_id) {
       return NextResponse.json(

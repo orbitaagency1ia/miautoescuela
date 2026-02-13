@@ -14,12 +14,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Get school_id
-    const { data: membership } = await (supabase
+    const { data: membership } = await supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
-      .single() as any);
+      .single();
 
     if (!membership) {
       return NextResponse.json(
@@ -39,18 +39,18 @@ export async function POST(request: NextRequest) {
     }
 
     // Get current max order_index
-    const { data: lastModule } = await (supabase
+    const { data: lastModule } = await supabase
       .from('modules')
       .select('order_index')
       .eq('school_id', membership.school_id)
       .order('order_index', { ascending: false })
       .limit(1)
-      .maybeSingle() as any);
+      .maybeSingle();
 
     const newOrderIndex = (lastModule?.order_index ?? -1) + 1;
 
-    const { data, error } = await (supabase
-      .from('modules') as any)
+    const { data, error } = await supabase
+      .from('modules')
       .insert({
         school_id: membership.school_id,
         title,

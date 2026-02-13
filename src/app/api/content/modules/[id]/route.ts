@@ -8,10 +8,10 @@ export async function DELETE(
   const supabase = await createClient();
   const { id } = await params;
 
-  const { error } = await (supabase
+  const { error } = await supabase
     .from('modules')
     .delete()
-    .eq('id', id) as any);
+    .eq('id', id);
 
   if (error) {
     return NextResponse.json(
@@ -34,8 +34,8 @@ export async function POST(
     const body = await request.json();
     const { is_published } = body;
 
-    const { error } = await (supabase
-      .from('modules') as any)
+    const { error } = await supabase
+      .from('modules')
       .update({ is_published })
       .eq('id', id);
 

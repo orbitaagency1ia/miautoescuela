@@ -2,13 +2,14 @@ import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { generateSlug } from '@/lib/utils';
 import { NextRequest, NextResponse } from 'next/server';
+import { sendWelcomeEmail } from '@/lib/email';
 
 export async function GET() {
   const supabase = await createClient();
 
-  const { data: schools, error } = await (supabase
+  const { data: schools, error } = await supabase
     .from('schools')
-    .select('*') as any)
+    .select('*')
     .order('created_at', { ascending: false });
 
   if (error) {
@@ -36,9 +37,9 @@ export async function POST(request: NextRequest) {
     const slug = generateSlug(name);
 
     // Check if slug exists
-    const { data: existingSchool } = await (supabase
+    const { data: existingSchool } = await supabase
       .from('schools')
-      .select('id') as any)
+      .select('id')
       .eq('slug', slug)
       .maybeSingle();
 
@@ -62,8 +63,8 @@ export async function POST(request: NextRequest) {
       trial_ends_at: trialEndsAt.toISOString(),
     };
 
-    const insertResult = await (supabase
-      .from('schools') as any)
+    const insertResult = await supabase
+      .from('schools')
       .insert(schoolData)
       .select()
       .single();
@@ -111,21 +112,21 @@ export async function POST(request: NextRequest) {
     }
 
     // Create profile
-    await (supabase.from('profiles') as any).insert({
+    await supabase.from('profiles').insert({
       user_id: authData.user.id,
       full_name: ownerName,
     });
 
     // Add as owner
-    await (supabase.from('school_members') as any).insert({
+    await supabase.from('school_members').insert({
       school_id: school.id,
       user_id: authData.user.id,
       role: 'owner',
       status: 'active',
     });
 
-    // TODO: Send email with temp password
-    console.log(`School created! Owner temp password: ${tempPassword}`);
+    // Send welcome email with temp password
+    await sendWelcomeEmail(ownerEmail, name, tempPassword);
 
     return NextResponse.json({ success: true, school });
   } catch (error) {

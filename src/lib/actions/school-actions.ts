@@ -16,9 +16,8 @@ export async function updateSchool(schoolId: string, data: {
   secondary_color?: string;
 }) {
   const supabase = await createClient();
-  const db = supabase as any;
 
-  const { error } = await db
+  const { error } = await supabase
     .from('schools')
     .update(data)
     .eq('id', schoolId);
@@ -34,11 +33,10 @@ export async function updateSchool(schoolId: string, data: {
 
 export async function toggleSchoolStatus(schoolId: string, currentStatus: string) {
   const supabase = await createClient();
-  const db = supabase as any;
 
   const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
 
-  const { error } = await db
+  const { error } = await supabase
     .from('schools')
     .update({ subscription_status: newStatus })
     .eq('id', schoolId);
@@ -54,9 +52,8 @@ export async function toggleSchoolStatus(schoolId: string, currentStatus: string
 
 export async function deleteSchool(schoolId: string) {
   const supabase = await createClient();
-  const db = supabase as any;
 
-  const { error } = await db
+  const { error } = await supabase
     .from('schools')
     .delete()
     .eq('id', schoolId);
@@ -73,9 +70,8 @@ export async function deleteSchool(schoolId: string) {
 // Student Actions
 export async function updateStudentStatus(schoolId: string, userId: string, newStatus: 'active' | 'suspended') {
   const supabase = await createClient();
-  const db = supabase as any;
 
-  const { error } = await db
+  const { error } = await supabase
     .from('school_members')
     .update({ status: newStatus })
     .eq('school_id', schoolId)
@@ -91,9 +87,8 @@ export async function updateStudentStatus(schoolId: string, userId: string, newS
 
 export async function removeStudent(schoolId: string, userId: string) {
   const supabase = await createClient();
-  const db = supabase as any;
 
-  const { error } = await db
+  const { error } = await supabase
     .from('school_members')
     .delete()
     .eq('school_id', schoolId)
@@ -109,17 +104,16 @@ export async function removeStudent(schoolId: string, userId: string) {
 
 export async function inviteStudent(schoolId: string, email: string, role: string = 'student') {
   const supabase = await createClient();
-  const db = supabase as any;
 
   // Check if email already exists in profiles
-  const { data: existingProfile } = await db
+  const { data: existingProfile } = await supabase
     .from('profiles')
     .select('id')
     .eq('email', email)
     .maybeSingle();
 
   // Check if already invited
-  const { data: existingInvite } = await db
+  const { data: existingInvite } = await supabase
     .from('invites')
     .select('*')
     .eq('school_id', schoolId)
@@ -133,7 +127,7 @@ export async function inviteStudent(schoolId: string, email: string, role: strin
 
   // If user exists, add directly to school_members
   if (existingProfile) {
-    const { error: memberError } = await db
+    const { error: memberError } = await supabase
       .from('school_members')
       .insert({
         school_id: schoolId,
@@ -155,7 +149,7 @@ export async function inviteStudent(schoolId: string, email: string, role: strin
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + 7); // 7 days expiry
 
-  const { error } = await db
+  const { error } = await supabase
     .from('invites')
     .insert({
       school_id: schoolId,
@@ -184,9 +178,8 @@ export async function removeAdmin(schoolId: string, userId: string) {
 
 export async function updateAdminRole(schoolId: string, userId: string, newRole: 'owner' | 'admin') {
   const supabase = await createClient();
-  const db = supabase as any;
 
-  const { error } = await db
+  const { error } = await supabase
     .from('school_members')
     .update({ role: newRole })
     .eq('school_id', schoolId)

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { createServiceClient } from '@/lib/supabase/server';
 import { generateSlug } from '@/lib/utils';
 import { TOAST_MESSAGES } from '@/lib/constants';
+import { sendWelcomeEmail } from '@/lib/email';
 
 /**
  * Create School Action
@@ -27,7 +28,8 @@ export async function createSchoolAction(formData: FormData) {
   const slug = generateSlug(name);
 
   // Check if slug already exists
-  const { data: existingSchool } = await (supabase.from('schools') as any)
+  const { data: existingSchool } = await supabase
+    .from('schools')
     .select('id')
     .eq('slug', slug)
     .maybeSingle();
@@ -40,7 +42,8 @@ export async function createSchoolAction(formData: FormData) {
   const trialEndsAt = new Date();
   trialEndsAt.setDate(trialEndsAt.getDate() + 14);
 
-  const { data: school, error: schoolError } = await (supabase.from('schools') as any)
+  const { data: school, error: schoolError } = await supabase
+    .from('schools')
     .insert({
       name,
       slug,
@@ -85,10 +88,12 @@ export async function createSchoolAction(formData: FormData) {
   }
 
   // Create profile (using user_id as primary key)
-  const { error: profileError } = await (supabase.from('profiles') as any).insert({
-    user_id: authData.user.id,
-    full_name: ownerName,
-  });
+  const { error: profileError } = await supabase
+    .from('profiles')
+    .insert({
+      user_id: authData.user.id,
+      full_name: ownerName,
+    });
 
   if (profileError) {
     console.error('Error creating profile:', profileError);
@@ -96,20 +101,22 @@ export async function createSchoolAction(formData: FormData) {
   }
 
   // Add as owner
-  const { error: memberError } = await (supabase.from('school_members') as any).insert({
-    school_id: school.id,
-    user_id: authData.user.id,
-    role: 'owner',
-    status: 'active',
-  });
+  const { error: memberError } = await supabase
+    .from('school_members')
+    .insert({
+      school_id: school.id,
+      user_id: authData.user.id,
+      role: 'owner',
+      status: 'active',
+    });
 
   if (memberError) {
     console.error('Error adding owner:', memberError);
     throw new Error(TOAST_MESSAGES.ERROR_GENERIC);
   }
 
-  // TODO: Send welcome email with temporary password
-  console.log(`School created! Owner temp password: ${tempPassword}`);
+  // Send welcome email with temporary password
+  await sendWelcomeEmail(ownerEmail, name, tempPassword);
 
   revalidatePath('/admin/autoescuelas');
   redirect('/admin/autoescuelas');
@@ -135,7 +142,8 @@ export async function updateSchoolAction(schoolId: string, formData: FormData) {
   // Generate slug from name
   const slug = generateSlug(name);
 
-  const { error } = await (supabase.from('schools') as any)
+  const { error } = await supabase
+    .from('schools')
     .update({
       name,
       slug,
@@ -162,7 +170,8 @@ export async function updateSchoolAction(schoolId: string, formData: FormData) {
 export async function deleteSchoolAction(schoolId: string) {
   const supabase = await createServiceClient();
 
-  const { error } = await (supabase.from('schools') as any)
+  const { error } = await supabase
+    .from('schools')
     .delete()
     .eq('id', schoolId);
 

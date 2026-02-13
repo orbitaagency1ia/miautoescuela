@@ -9,9 +9,9 @@ export async function DELETE(
   const { id } = await params;
 
   try {
-    const { error } = await (supabase
+    const { error } = await supabase
       .from('schools')
-      .delete() as any)
+      .delete()
       .eq('id', id);
 
     if (error) {

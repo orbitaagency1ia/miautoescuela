@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Code, Copy, Check, Sparkles, Link2, Calendar, X } from 'lucide-react';
+import { toast } from '@/components/ui/toaster';
 
 interface InviteCodeGeneratorProps {
   primaryColor: string;
@@ -35,7 +36,11 @@ export function InviteCodeGenerator({ primaryColor, secondaryColor }: InviteCode
       setShareableLink(data.shareableLink);
     } catch (error: any) {
       console.error('Error generating code:', error);
-      alert(error.message || 'Error al generar código');
+      toast({
+        title: 'Error',
+        description: error.message || 'No se pudo generar el código',
+        variant: 'destructive',
+      });
     } finally {
       setLoading(false);
     }

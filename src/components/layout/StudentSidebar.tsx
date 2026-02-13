@@ -47,7 +47,7 @@ export function StudentSidebar() {
           .select('school_id')
           .eq('user_id', user.id)
           .eq('status', 'active')
-          .maybeSingle() as any;
+          .maybeSingle();
 
         if (membership?.school_id) {
           // Get school data with colors
@@ -55,7 +55,7 @@ export function StudentSidebar() {
             .from('schools')
             .select('name, logo_url, primary_color, secondary_color')
             .eq('id', membership.school_id)
-            .maybeSingle() as any;
+            .maybeSingle();
 
           if (school) {
             setSchoolName(school.name);
@@ -69,7 +69,7 @@ export function StudentSidebar() {
             .from('profiles')
             .select('activity_points')
             .eq('user_id', user.id)
-            .maybeSingle() as any;
+            .maybeSingle();
 
           setUserPoints(profile?.activity_points || 0);
         }

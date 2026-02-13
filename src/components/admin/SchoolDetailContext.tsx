@@ -74,12 +74,14 @@ export function SchoolDetailProvider({
 
   // Log for debugging
   useEffect(() => {
-    console.log('SchoolDetailProvider mounted', { schoolId, school });
+    // Development-only logging
+    if (process.env.NODE_ENV === 'development') {
+      console.log('SchoolDetailProvider mounted', { schoolId, school });
+    }
   }, [schoolId, school]);
 
   // School Actions
   const handleToggleSchool = async () => {
-    console.log('handleToggleSchool called');
     const result = await toggleSchoolStatus(schoolId, school.subscription_status);
     if (result.success) {
       router.refresh();
@@ -88,24 +90,20 @@ export function SchoolDetailProvider({
   };
 
   const handleDeleteSchool = async () => {
-    console.log('handleDeleteSchool called');
     return deleteSchool(schoolId);
   };
 
   // Student Actions
   const handleToggleStudent = async (student: any) => {
-    console.log('handleToggleStudent called', student);
     const newStatus = student.status === 'active' ? 'suspended' : 'active';
     return updateStudentStatus(schoolId, student.user_id, newStatus);
   };
 
   const handleRemoveStudent = async (student: any) => {
-    console.log('handleRemoveStudent called', student);
     return removeStudent(schoolId, student.user_id);
   };
 
   const openToggleStudentDialog = (student: any) => {
-    console.log('openToggleStudentDialog called', student);
     const newStatus = student.status === 'active' ? 'suspended' : 'active';
     setConfirmDialog({
       open: true,
@@ -117,7 +115,6 @@ export function SchoolDetailProvider({
   };
 
   const openRemoveStudentDialog = (student: any) => {
-    console.log('openRemoveStudentDialog called', student);
     setConfirmDialog({
       open: true,
       title: 'Eliminar Alumno',
@@ -128,7 +125,6 @@ export function SchoolDetailProvider({
   };
 
   const openToggleSchoolDialog = () => {
-    console.log('openToggleSchoolDialog called');
     const newStatus = school.subscription_status === 'active' ? 'suspended' : 'active';
     setConfirmDialog({
       open: true,
@@ -140,7 +136,6 @@ export function SchoolDetailProvider({
   };
 
   const openDeleteSchoolDialog = () => {
-    console.log('openDeleteSchoolDialog called');
     setConfirmDialog({
       open: true,
       title: 'Eliminar Autoescuela',
@@ -151,7 +146,6 @@ export function SchoolDetailProvider({
   };
 
   const openStudentDetail = (student: any) => {
-    console.log('openStudentDetail called', student);
     setSelectedStudent(student);
     setStudentDetailOpen(true);
   };
@@ -162,15 +156,12 @@ export function SchoolDetailProvider({
     primaryColor,
     secondaryColor,
     openEditDialog: () => {
-      console.log('openEditDialog called');
       setEditDialogOpen(true);
     },
     openInviteDialog: () => {
-      console.log('openInviteDialog called');
       setInviteDialogOpen(true);
     },
     openAdminDialog: () => {
-      console.log('openAdminDialog called');
       setAdminDialogOpen(true);
     },
     openToggleSchoolDialog,

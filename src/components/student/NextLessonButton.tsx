@@ -41,7 +41,6 @@ export function NextLessonButton({
         // Then navigate
         router.push(`/cursos/${moduleId}/${nextLessonId}`);
       } catch (error) {
-        console.error('Error:', error);
         setNavigating(false);
       }
     });

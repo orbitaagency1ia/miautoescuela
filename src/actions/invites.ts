@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/server';
 import { createServiceClient } from '@/lib/supabase/server';
 import { generateToken, hashToken, isValidEmail } from '@/lib/utils';
 import { TOAST_MESSAGES, INVITE_TOKEN_EXPIRY_DAYS } from '@/lib/constants';
+import { sendInviteEmail } from '@/lib/email';
 
 /**
  * Create Invite Action
@@ -19,13 +20,10 @@ export async function createInviteAction(email: string, message?: string) {
   }
 
   // TEMPORAL: Obtener primera escuela disponible sin autenticación
-  const result = await (supabase
+  const result = await supabase
     .from('schools')
     .select('id, subscription_status')
-    .limit(1) as any);
-
-  console.log('=== DEBUG SCHOOLS ===');
-  console.log('Result:', result);
+    .limit(1);
 
   const school = result.data;
 
@@ -45,8 +43,8 @@ export async function createInviteAction(email: string, message?: string) {
   expiresAt.setDate(expiresAt.getDate() + INVITE_TOKEN_EXPIRY_DAYS);
 
   // Create invite
-  const { error: inviteError } = await (supabase
-    .from('invites') as any)
+  const { error: inviteError } = await supabase
+    .from('invites')
     .insert({
       school_id: school.id,
       email,
@@ -61,13 +59,12 @@ export async function createInviteAction(email: string, message?: string) {
     throw new Error(TOAST_MESSAGES.ERROR_GENERIC);
   }
 
-  // TODO: Send email with invite link
+  // Send email with invite link
   const inviteLink = `${process.env.NEXT_PUBLIC_APP_URL}/invitacion/${token}`;
-  console.log('=== INVITACIÓN CREADA ===');
-  console.log('Email:', email);
-  console.log('Invite link:', inviteLink);
-  console.log('Message:', message);
-  console.log('====================');
+  const schoolName = school.name || 'Tu autoescuela';
+  const inviterName = 'Administrador'; // TODO: Get actual inviter name from context
+
+  await sendInviteEmail(email, schoolName, token, inviterName, message);
 
   revalidatePath('/alumnos');
 }
@@ -81,11 +78,11 @@ export async function getSchoolContext() {
   const supabase = await createClient();
 
   // TEMPORAL: Obtener primera escuela sin autenticación
-  const { data: school } = await (supabase
+  const { data: school } = await supabase
     .from('schools')
     .select('id, name, slug, logo_url, primary_color, subscription_status')
     .limit(1)
-    .maybeSingle() as any);
+    .maybeSingle();
 
   if (!school) {
     return null;

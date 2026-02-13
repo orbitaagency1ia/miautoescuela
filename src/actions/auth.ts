@@ -63,12 +63,12 @@ export async function loginAction(prevState: FormState, formData: FormData): Pro
   }
 
   // Obtener membresía del usuario para redirigir correctamente
-  const { data: membership } = await (supabase
+  const { data: membership } = await supabase
     .from('school_members')
     .select('role')
     .eq('user_id', data.user.id)
     .eq('status', 'active')
-    .maybeSingle() as any);
+    .maybeSingle();
 
   // Check if user is super admin (email domain check)
   const userEmail = data.user.email;
@@ -159,11 +159,13 @@ export async function registerAction(prevState: FormState, formData: FormData): 
   }
 
   // Crear perfil usando service role (bypasses RLS)
-  const { error: profileError } = await (serviceSupabase.from('profiles') as any).insert({
-    user_id: authData.user.id,
-    full_name: fullName,
-    phone: phone || null,
-  });
+  const { error: profileError } = await serviceSupabase
+    .from('profiles')
+    .insert({
+      user_id: authData.user.id,
+      full_name: fullName,
+      phone: phone || null,
+    });
 
   if (profileError) {
     console.error('Error creando perfil:', profileError);
@@ -257,12 +259,12 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   // Verify invite token and get invite data
   // Note: table has token_hash (SHA-256), not token
   // Note: table uses used_at (null = pending, date = used), not status
-  const { data: invite, error: inviteError } = await (supabase
+  const { data: invite, error: inviteError } = await supabase
     .from('invites')
     .select('*')
     .eq('token_hash', tokenHash)
     .is('used_at', null)
-    .maybeSingle() as any);
+    .maybeSingle();
 
   if (inviteError || !invite) {
     console.error('Error verifying invite:', inviteError);
@@ -317,11 +319,13 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   }
 
   // Create profile using service role (bypasses RLS)
-  const { error: profileError } = await (serviceSupabase.from('profiles') as any).insert({
-    user_id: authData.user.id,
-    full_name: fullName,
-    phone: phone || null,
-  });
+  const { error: profileError } = await serviceSupabase
+    .from('profiles')
+    .insert({
+      user_id: authData.user.id,
+      full_name: fullName,
+      phone: phone || null,
+    });
 
   if (profileError) {
     console.error('Error creando perfil:', profileError);
@@ -332,12 +336,14 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   }
 
   // Add user to school_members
-  const { error: memberError } = await (serviceSupabase.from('school_members') as any).insert({
-    user_id: authData.user.id,
-    school_id: invite.school_id,
-    role: invite.role || 'student',
-    status: 'active',
-  });
+  const { error: memberError } = await serviceSupabase
+    .from('school_members')
+    .insert({
+      user_id: authData.user.id,
+      school_id: invite.school_id,
+      role: invite.role || 'student',
+      status: 'active',
+    });
 
   if (memberError) {
     console.error('Error añadiendo a escuela:', memberError);
@@ -348,8 +354,8 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   }
 
   // Mark invite as used by setting used_at
-  await (serviceSupabase
-    .from('invites') as any)
+  await serviceSupabase
+    .from('invites')
     .update({ used_at: new Date().toISOString() })
     .eq('token_hash', tokenHash);
 

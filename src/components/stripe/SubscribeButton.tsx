@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Loader2 } from 'lucide-react';
+import { toast } from '@/components/ui/toaster';
 
 interface SubscribeButtonProps {
   size?: 'default' | 'sm' | 'lg';
@@ -26,8 +27,11 @@ export function SubscribeButton({ size = 'default', className }: SubscribeButton
         throw new Error('No se recibió URL de checkout');
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error al iniciar el proceso de pago');
+      toast({
+        title: 'Error de pago',
+        description: 'No se pudo iniciar el proceso de pago',
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }

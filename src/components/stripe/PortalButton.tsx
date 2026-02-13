@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { CreditCard, Loader2 } from 'lucide-react';
+import { toast } from '@/components/ui/toaster';
 
 interface PortalButtonProps {
   className?: string;
@@ -25,8 +26,11 @@ export function PortalButton({ className }: PortalButtonProps) {
         throw new Error('No se recibió URL del portal');
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert('Error al abrir el portal de gestión');
+      toast({
+        title: 'Error',
+        description: 'No se pudo abrir el portal de gestión',
+        variant: 'destructive',
+      });
     } finally {
       setIsLoading(false);
     }

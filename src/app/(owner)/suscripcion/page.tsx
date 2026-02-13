@@ -4,6 +4,7 @@ import { AlertTriangle, CheckCircle2, Crown, Sparkles, Zap, CreditCard, Trending
 import { Button } from '@/components/ui/button';
 import { SubscribeButton } from '@/components/stripe/SubscribeButton';
 import { PortalButton } from '@/components/stripe/PortalButton';
+import { InvoiceHistory } from '@/components/stripe/InvoiceHistory';
 import { cn } from '@/lib/utils';
 
 export default async function SubscriptionPage() {
@@ -277,45 +278,11 @@ export default async function SubscriptionPage() {
       )}
 
       {/* Billing History */}
-      <div className="bg-white rounded-[20px] border-2 p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_12px_32px_rgba(59,130,246,0.15)] hover:-translate-y-1 transition-all duration-300 group animate-fade-in select-none border-slate-100 hover:border-blue-200" style={{ animationDelay: '300ms' }}>
-        <div className="border-b bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl mb-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 shadow-md flex items-center justify-center">
-              <CreditCard className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold text-slate-900">Historial de Facturas</h3>
-              <p className="text-sm text-slate-500 mt-1">
-                {school?.stripe_customer_id
-                  ? 'Gestiona tus facturas y recibos desde el portal de Stripe'
-                  : 'Necesitas tener una suscripción activa para ver las facturas'
-                }
-              </p>
-            </div>
-          </div>
-        </div>
-        {school?.stripe_customer_id ? (
-          <div className="text-center py-6">
-            <PortalButton className="rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" />
-          </div>
-        ) : (
-          <div className="text-center py-8">
-            <div
-              className="inline-flex p-6 rounded-[20px] mb-4"
-              style={{ backgroundColor: `${primaryColor}10` }}
-            >
-              <CreditCard className="h-12 w-12 opacity-50" style={{ color: primaryColor }} />
-            </div>
-            <p className="text-slate-600 mb-6">
-              Activa tu suscripción para ver el historial de facturas
-            </p>
-            <SubscribeButton
-              size="lg"
-              className="rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            />
-          </div>
-        )}
-      </div>
+      <InvoiceHistory
+        hasActiveSubscription={isActive && !!school?.stripe_customer_id}
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+      />
     </div>
   );
 }

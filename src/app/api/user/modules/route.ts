@@ -14,12 +14,12 @@ export async function GET() {
     }
 
     // Get school_id from active membership
-    const { data: membership, error: membershipError } = await (supabase
+    const { data: membership, error: membershipError } = await supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
-      .maybeSingle() as any);
+      .maybeSingle();
 
     if (membershipError || !membership) {
       return NextResponse.json(
@@ -29,7 +29,7 @@ export async function GET() {
     }
 
     // Get published modules with published lessons
-    const { data: modules, error: modulesError } = await (supabase
+    const { data: modules, error: modulesError } = await supabase
       .from('modules')
       .select(`
         id,
@@ -47,7 +47,7 @@ export async function GET() {
       `)
       .eq('school_id', membership.school_id)
       .eq('is_published', true)
-      .order('order_index', { ascending: true }) as any);
+      .order('order_index', { ascending: true });
 
     if (modulesError) {
       console.error('Error fetching modules:', modulesError);

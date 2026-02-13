@@ -4,13 +4,17 @@ import { Edit, UserPlus, Settings, Pause, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSchoolDetail } from './SchoolDetailContext';
+import { toast } from '@/components/ui/toaster';
 
 export function SchoolActionsCard() {
   const { openEditDialog, openInviteDialog, openToggleSchoolDialog, school, primaryColor, secondaryColor } = useSchoolDetail();
 
   const openSubscriptionDialog = () => {
-    // TODO: Implement subscription dialog
-    alert('Próximamente: Gestión de suscripción');
+    toast({
+      title: 'Próximamente',
+      description: 'Gestión de suscripción estará disponible pronto.',
+      variant: 'default',
+    });
   };
 
   return (

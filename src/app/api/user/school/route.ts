@@ -14,12 +14,12 @@ export async function GET() {
     }
 
     // Get school_id from active membership
-    const { data: membership, error: membershipError } = await (supabase
+    const { data: membership, error: membershipError } = await supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
-      .maybeSingle() as any);
+      .maybeSingle();
 
     if (membershipError || !membership) {
       return NextResponse.json(
@@ -29,11 +29,11 @@ export async function GET() {
     }
 
     // Get school data
-    const { data: school, error: schoolError } = await (supabase
+    const { data: school, error: schoolError } = await supabase
       .from('schools')
       .select('id, name, slug, logo_url, primary_color')
       .eq('id', membership.school_id)
-      .maybeSingle() as any);
+      .maybeSingle();
 
     if (schoolError || !school) {
       return NextResponse.json(

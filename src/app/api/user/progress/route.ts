@@ -14,11 +14,11 @@ export async function GET() {
     }
 
     // Get all completed lessons (where completed_at is not null)
-    const { data: completedLessons, error: progressError } = await (supabase
+    const { data: completedLessons, error: progressError } = await supabase
       .from('lesson_progress')
       .select('lesson_id')
       .eq('user_id', user.id)
-      .not('completed_at', 'is', null) as any);
+      .not('completed_at', 'is', null);
 
     if (progressError) {
       console.error('Error fetching progress:', progressError);
@@ -31,11 +31,11 @@ export async function GET() {
     const completedLessonIds = completedLessons?.map((p: any) => p.lesson_id) || [];
 
     // Get activity points from profiles table
-    const { data: profile } = await (supabase
+    const { data: profile } = await supabase
       .from('profiles')
       .select('activity_points')
       .eq('user_id', user.id)
-      .maybeSingle() as any);
+      .maybeSingle();
 
     return NextResponse.json({
       completedLessonIds,

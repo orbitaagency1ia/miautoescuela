@@ -172,12 +172,12 @@ export function VideoUploadDialog({
           throw new Error('No autenticado');
         }
 
-        const { data: membership } = await (supabase
+        const { data: membership } = await supabase
           .from('school_members')
           .select('school_id')
           .eq('user_id', user.id)
           .eq('status', 'active')
-          .single() as any);
+          .single();
 
         if (!membership) {
           throw new Error('No tienes acceso a ninguna autoescuela');

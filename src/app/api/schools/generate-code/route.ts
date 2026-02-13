@@ -13,13 +13,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener school_id del owner
-    const { data: membership } = await (supabase
+    const { data: membership } = await supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle() as any);
+      .maybeSingle();
 
     if (!membership) {
       return NextResponse.json(
@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
     expiresAt.setDate(expiresAt.getDate() + 7);
 
     // Crear invitación
-    const { data: invite, error: inviteError } = await (supabase
-      .from('invites') as any)
+    const { data: invite, error: inviteError } = await supabase
+      .from('invites')
       .insert({
         school_id: membership.school_id,
         email: code + '@code', // Email placeholder (no se usa para registro)

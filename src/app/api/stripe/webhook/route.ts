@@ -40,16 +40,16 @@ export async function POST(request: NextRequest) {
           const subscriptionId = session.subscription as string;
 
           // Update school with subscription info
-          await (supabase
-            .from('schools') as any)
+          await supabase
+            .from('schools')
             .update({
               stripe_subscription_id: subscriptionId,
+              stripe_customer_id: session.customer as string,
               subscription_status: 'active',
-              trial_ends_at: null, // End trial when they subscribe
+              trial_ends_at: null,
             })
             .eq('id', schoolId);
 
-          console.log(`School ${schoolId} subscribed successfully`);
         }
         break;
       }
@@ -64,14 +64,13 @@ export async function POST(request: NextRequest) {
             ? subscription.status
             : 'past_due';
 
-          await (supabase
-            .from('schools') as any)
+          await supabase
+            .from('schools')
             .update({
               subscription_status: status,
             })
             .eq('id', schoolId);
 
-          console.log(`School ${schoolId} subscription updated to ${status}`);
         }
         break;
       }
@@ -81,21 +80,38 @@ export async function POST(request: NextRequest) {
         const schoolId = subscription.metadata?.school_id;
 
         if (schoolId) {
-          await (supabase
-            .from('schools') as any)
+          await supabase
+            .from('schools')
             .update({
               subscription_status: 'canceled',
               stripe_subscription_id: null,
             })
             .eq('id', schoolId);
 
-          console.log(`School ${schoolId} subscription canceled`);
         }
         break;
       }
 
       case 'invoice.payment_succeeded': {
-        console.log('Payment succeeded');
+        const invoice = event.data.object as Stripe.Invoice;
+
+        // Update school status to active if it was past_due
+        if ((invoice as any).subscription) {
+          const subscription = await stripe.subscriptions.retrieve(
+            (invoice as any).subscription as string
+          );
+          const schoolId = subscription.metadata?.school_id;
+
+          if (schoolId && subscription.status === 'active') {
+            await supabase
+              .from('schools')
+              .update({
+                subscription_status: 'active',
+              })
+              .eq('id', schoolId);
+          }
+        }
+
         break;
       }
 
@@ -110,21 +126,53 @@ export async function POST(request: NextRequest) {
           const schoolId = subscription.metadata?.school_id;
 
           if (schoolId) {
-            await (supabase
-              .from('schools') as any)
+            await supabase
+              .from('schools')
               .update({
                 subscription_status: 'past_due',
               })
               .eq('id', schoolId);
 
-            console.log(`School ${schoolId} payment failed, marked as past_due`);
           }
         }
         break;
       }
 
+      // NEW EVENTS
+
+      case 'charge.refunded': {
+        const charge = event.data.object as Stripe.Charge;
+        // Could track refunds in a separate table
+        break;
+      }
+
+      case 'payment_method.attached': {
+        const paymentMethod = event.data.object as Stripe.PaymentMethod;
+        // Could update default payment method in schools table
+        break;
+      }
+
+      case 'invoice.upcoming': {
+        const invoice = event.data.object as Stripe.Invoice;
+        const schoolId = (invoice as any).subscription_metadata?.school_id;
+
+        if (schoolId) {
+          // Could send notification email about upcoming payment
+        }
+        break;
+      }
+
+      case 'customer.subscription.trial_will_end': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const schoolId = subscription.metadata?.school_id;
+
+        if (schoolId) {
+          // Could send notification about trial ending
+        }
+        break;
+      }
+
       default:
-        console.log(`Unhandled event type: ${event.type}`);
     }
 
     return NextResponse.json({ received: true });

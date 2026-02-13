@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Building2, Sparkles, Mail, Loader2, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { simpleLogoutAction } from '@/actions/auth';
-import CreateSchoolForm from './create-school-form';
+import SetupWizard from '@/components/setup/SetupWizard';
 
 export default async function SetupPage() {
   const supabase = await createClient();
@@ -73,7 +73,7 @@ export default async function SetupPage() {
             </div>
           </div>
 
-          <CreateSchoolForm userId={user.id} userEmail={user.email!} />
+          <SetupWizard userId={user.id} userEmail={user.email!} />
 
           <div className="text-sm text-muted-foreground">
             ¿Ya tienes una autoescuela?{' '}

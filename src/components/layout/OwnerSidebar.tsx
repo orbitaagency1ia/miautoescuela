@@ -71,7 +71,7 @@ export function OwnerSidebar({ schoolName: propSchoolName }: { schoolName?: stri
           .eq('user_id', user.id)
           .eq('status', 'active')
           .eq('role', 'owner')
-          .maybeSingle() as any;
+          .maybeSingle();
 
         if (membership?.school_id) {
           // Get school data for logo and name
@@ -79,7 +79,7 @@ export function OwnerSidebar({ schoolName: propSchoolName }: { schoolName?: stri
             .from('schools')
             .select('id, name, logo_url')
             .eq('id', membership.school_id)
-            .maybeSingle() as any;
+            .maybeSingle();
 
           if (school) {
             setSchoolData(school);

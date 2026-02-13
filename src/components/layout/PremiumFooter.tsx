@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Car, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Youtube, ArrowUp } from 'lucide-react';
+import Image from 'next/image';
+import { Car, Mail, Phone, MapPin, Facebook, Twitter, Linkedin, Instagram, Youtube, ArrowUp, Globe } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 
@@ -20,36 +21,29 @@ const footerSections = [
     links: [
       { name: 'Sobre Nosotros', href: '/about' },
       { name: 'Blog', href: '/blog' },
-      { name: 'Carreras', href: '/careers' },
-      { name: 'Prensa', href: '/press' },
     ],
   },
   {
     title: 'Soporte',
     links: [
       { name: 'Centro de Ayuda', href: '/help' },
-      { name: 'Documentación', href: '/docs' },
-      { name: 'Estado del Sistema', href: '/status' },
       { name: 'Contacto', href: '/contact' },
     ],
   },
   {
     title: 'Legal',
     links: [
-      { name: 'Privacidad', href: '/privacy' },
-      { name: 'Términos', href: '/terms' },
-      { name: 'Cookies', href: '/cookies' },
-      { name: 'Licencias', href: '/licenses' },
+      { name: 'Política de Privacidad', href: '/privacy' },
+      { name: 'Términos y Condiciones', href: '/terms' },
+      { name: 'Política de Cookies', href: '/cookies' },
+      { name: 'Aviso Legal', href: '/legal' },
     ],
   },
 ];
 
 const socialLinks = [
-  { name: 'Facebook', icon: Facebook, href: 'https://facebook.com/miautoescuela' },
-  { name: 'Twitter', icon: Twitter, href: 'https://twitter.com/miautoescuela' },
-  { name: 'LinkedIn', icon: Linkedin, href: 'https://linkedin.com/company/miautoescuela' },
-  { name: 'Instagram', icon: Instagram, href: 'https://instagram.com/miautoescuela' },
-  { name: 'YouTube', icon: Youtube, href: 'https://youtube.com/@miautoescuela' },
+  { name: 'Instagram', icon: Instagram, href: 'https://www.instagram.com/orbitaagency.ia?igsh=eTU1Y3E2cWx3YWk4' },
+  { name: 'Web', icon: Globe, href: 'https://www.orbitaagency.com/' },
 ];
 
 export function PremiumFooter() {
@@ -138,28 +132,50 @@ export function PremiumFooter() {
 
         {/* Contact Info */}
         <div
-          className="mt-12 pt-8 grid grid-cols-1 md:grid-cols-3 gap-6"
+          className="mt-12 pt-8 grid grid-cols-1 md:grid-cols-2 gap-6"
           style={{ borderTopColor: '#E5E5E5' }}
         >
-          <a
-            href="mailto:contacto@miautoescuela.com"
-            className="flex items-center gap-3 text-sm transition-colors hover:opacity-60"
-            style={{ color: '#1A1A1A' }}
-          >
-            <Mail className="h-5 w-5" style={{ color: '#000000' }} />
-            contacto@miautoescuela.com
-          </a>
-          <a
-            href="tel:+34900123456"
-            className="flex items-center gap-3 text-sm transition-colors hover:opacity-60"
-            style={{ color: '#1A1A1A' }}
-          >
-            <Phone className="h-5 w-5" style={{ color: '#000000' }} />
-            +34 900 123 456
-          </a>
-          <div className="flex items-center gap-3 text-sm" style={{ color: '#1A1A1A' }}>
-            <MapPin className="h-5 w-5" style={{ color: '#000000' }} />
-            Madrid, España
+          <div className="space-y-4">
+            <p className="text-sm font-semibold" style={{ color: '#000000' }}>Contacto</p>
+            <a
+              href="tel:+34671696885"
+              className="flex items-center gap-3 text-sm transition-colors hover:opacity-60"
+              style={{ color: '#1A1A1A' }}
+            >
+              <Phone className="h-5 w-5" style={{ color: '#000000' }} />
+              Kevin: +34 671 69 68 85
+            </a>
+            <a
+              href="tel:+34619063815"
+              className="flex items-center gap-3 text-sm transition-colors hover:opacity-60"
+              style={{ color: '#1A1A1A' }}
+            >
+              <Phone className="h-5 w-5" style={{ color: '#000000' }} />
+              Rubén: +34 619 06 38 15
+            </a>
+          </div>
+          <div className="space-y-4">
+            <p className="text-sm font-semibold" style={{ color: '#000000' }}>Síguenos</p>
+            <a
+              href="https://www.instagram.com/orbitaagency.ia?igsh=eTU1Y3E2cWx3YWk4"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 text-sm transition-colors hover:opacity-60"
+              style={{ color: '#1A1A1A' }}
+            >
+              <Instagram className="h-5 w-5" style={{ color: '#000000' }} />
+              @orbitaagency.ia
+            </a>
+            <a
+              href="https://www.orbitaagency.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3 text-sm transition-colors hover:opacity-60"
+              style={{ color: '#1A1A1A' }}
+            >
+              <Globe className="h-5 w-5" style={{ color: '#000000' }} />
+              orbitaagency.com
+            </a>
           </div>
         </div>
       </div>
@@ -174,9 +190,29 @@ export function PremiumFooter() {
       >
         <div className="max-w-7xl mx-auto px-6 py-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-sm" style={{ color: '#666666' }}>
-              © {new Date().getFullYear()} mIAutoescuela. Todos los derechos reservados.
-            </p>
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <p className="text-sm" style={{ color: '#666666' }}>
+                © {new Date().getFullYear()} mIAutoescuela. Todos los derechos reservados.
+              </p>
+              <div className="flex items-center gap-2 text-sm px-4 py-2 rounded-lg bg-gray-100">
+                <span style={{ color: '#666666' }}>Desarrollado por</span>
+                <a
+                  href="https://www.orbitaagency.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2"
+                >
+                  <Image
+                    src="/orbita-logo.png"
+                    alt="OrbitaAgency"
+                    width={24}
+                    height={24}
+                    className="rounded-full brightness-0"
+                  />
+                  <span className="font-semibold" style={{ color: '#000000' }}>OrbitaAgency</span>
+                </a>
+              </div>
+            </div>
             <div className="flex items-center gap-6 text-sm">
               <Link
                 href="/privacy"

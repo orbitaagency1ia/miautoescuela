@@ -8,6 +8,7 @@ import { es } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
+import { toast } from '@/components/ui/toaster';
 
 interface School {
   id: string;
@@ -41,8 +42,17 @@ export function SchoolsList({ schools }: SchoolsListProps) {
 
     if (response.ok) {
       router.refresh();
+      toast({
+        title: 'Autoescuela eliminada',
+        description: 'La autoescuela se ha eliminado correctamente',
+        variant: 'success',
+      });
     } else {
-      alert('Error al eliminar autoescuela');
+      toast({
+        title: 'Error',
+        description: 'No se pudo eliminar la autoescuela',
+        variant: 'destructive',
+      });
       setDeletingId(null);
     }
   };
