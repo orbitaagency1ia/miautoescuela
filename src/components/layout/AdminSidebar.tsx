@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Car, LayoutDashboard, Building2, CreditCard, Settings, LogOut, Shield, Activity } from 'lucide-react';
+import { LayoutDashboard, Building2, CreditCard, Settings, LogOut, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
 import { simpleLogoutAction } from '@/actions/auth';
@@ -14,7 +14,6 @@ interface SidebarItem {
   label: string;
   href: string;
   icon: React.ElementType;
-  badge?: string;
 }
 
 const sidebarItems: SidebarItem[] = [
@@ -28,7 +27,6 @@ export function AdminSidebar() {
   const pathname = usePathname();
   const supabase = createClient();
   const [userName, setUserName] = useState<string>('');
-  const [systemStatus, setSystemStatus] = useState<'online' | 'offline'>('online');
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -47,6 +45,10 @@ export function AdminSidebar() {
     await simpleLogoutAction(formData);
   };
 
+  // Admin theme colors (slate-based for professional admin look)
+  const primaryColor = '#64748b';
+  const secondaryColor = '#475569';
+
   return (
     <div className="flex h-full w-64 flex-col bg-white border-r border-gray-200/60 shadow-[0_1px_4px_rgba(0,0,0,0.04)]">
       {/* Logo with Admin Branding - Premium Style */}
@@ -55,11 +57,11 @@ export function AdminSidebar() {
           <div className="relative">
             <div
               className="absolute inset-0 rounded-2xl blur-lg opacity-20 group-hover:opacity-30 transition-opacity"
-              style={{ background: 'linear-gradient(135deg, #64748b 0%, #475569 100%)' }}
+              style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)` }}
             />
             <div
               className="relative p-2.5 rounded-2xl shadow-lg transition-all duration-300 group-hover:scale-105"
-              style={{ background: 'linear-gradient(135deg, #64748b 0%, #475569 100%)' }}
+              style={{ background: `linear-gradient(135deg, ${primaryColor} 0%, ${secondaryColor} 100%)` }}
             >
               <Shield className="h-5 w-5 text-white" />
             </div>
@@ -69,12 +71,6 @@ export function AdminSidebar() {
             <span className="text-xs text-gray-500">Administración</span>
           </div>
         </Link>
-
-        {/* Status Indicator */}
-        <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-full bg-green-50 border border-green-200">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          <span className="text-xs font-medium text-green-600">{systemStatus}</span>
-        </div>
       </div>
 
       {/* System Stats Card - Premium Style */}
@@ -83,22 +79,25 @@ export function AdminSidebar() {
           <div
             className="p-4 rounded-2xl shadow-[0_1px_4px_rgba(0,0,0,0.06)]"
             style={{
-              background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-              borderColor: '#cbd5e1'
+              background: `linear-gradient(135deg, ${primaryColor}08 0%, ${secondaryColor}08 100%)`,
+              borderColor: `${primaryColor}20`,
+              border: '1px solid',
             }}
           >
             <div className="flex items-center gap-2 mb-3">
-              <Activity className="h-4 w-4 text-slate-600" />
-              <span className="text-xs font-semibold text-gray-700">Estado del Sistema</span>
+              <div className="p-1.5 rounded-lg" style={{ backgroundColor: `${primaryColor}15` }}>
+                <Shield className="h-3.5 w-3.5" style={{ color: primaryColor }} />
+              </div>
+              <span className="text-xs font-semibold text-gray-700">Super Admin</span>
             </div>
             <div className="grid grid-cols-2 gap-3 text-xs">
               <div className="flex flex-col">
-                <span className="text-gray-500">API</span>
-                <span className="text-green-600 font-bold">99.9%</span>
+                <span className="text-gray-500">Rol</span>
+                <span className="font-semibold" style={{ color: primaryColor }}>Admin</span>
               </div>
               <div className="flex flex-col">
-                <span className="text-gray-500">DB</span>
-                <span className="text-green-600 font-bold">OK</span>
+                <span className="text-gray-500">Acceso</span>
+                <span className="text-green-600 font-bold">Total</span>
               </div>
             </div>
           </div>
@@ -114,7 +113,7 @@ export function AdminSidebar() {
             <Link
               key={item.href}
               href={item.href}
-              className="group"
+              className="group block"
             >
               <div
                 className={cn(
@@ -124,19 +123,17 @@ export function AdminSidebar() {
                     : 'text-gray-600 hover:bg-gray-50'
                 )}
                 style={isActive ? {
-                  background: 'linear-gradient(135deg, rgba(100, 116, 139, 0.15) 0%, rgba(71, 85, 105, 0.15) 100%)',
-                  color: '#475569'
+                  background: `linear-gradient(135deg, ${primaryColor}15 0%, ${secondaryColor}15 100%)`,
+                  color: primaryColor
                 } : {}}
               >
                 <Icon className="h-5 w-5 flex-shrink-0" />
                 <span className="truncate">{item.label}</span>
-                {item.badge && (
-                  <span className="ml-auto px-2 py-0.5 rounded-full bg-blue-500 text-white text-xs">
-                    {item.badge}
-                  </span>
-                )}
                 {isActive && (
-                  <div className="ml-auto w-2 h-2 rounded-full shadow-sm animate-pulse bg-slate-500" />
+                  <div
+                    className="ml-auto w-2 h-2 rounded-full shadow-sm animate-pulse"
+                    style={{ backgroundColor: primaryColor }}
+                  />
                 )}
               </div>
             </Link>
@@ -149,12 +146,12 @@ export function AdminSidebar() {
         {!isLoading && (
           <>
             <div className="flex items-center gap-3 mb-3 p-3 rounded-2xl bg-white shadow-[0_1px_4px_rgba(0,0,0,0.06)]">
-              <Avatar>
+              <Avatar className="ring-2 ring-gray-200/50">
                 <AvatarFallback
                   className="text-sm font-semibold"
                   style={{
-                    background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
-                    color: '#475569'
+                    background: `linear-gradient(135deg, ${primaryColor}15 0%, ${secondaryColor}15 100%)`,
+                    color: primaryColor
                   }}
                 >
                   {userName.slice(0, 2).toUpperCase()}

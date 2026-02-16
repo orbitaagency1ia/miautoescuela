@@ -23,11 +23,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Check file size (max 2GB)
-    const MAX_SIZE = 2 * 1024 * 1024 * 1024; // 2GB in bytes
+    // Check file size (max 5GB)
+    const MAX_SIZE = 5 * 1024 * 1024 * 1024; // 5GB in bytes
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
-        { error: 'El archivo supera el tamaño máximo de 2GB' },
+        { error: 'El archivo supera el tamaño máximo de 5GB' },
         { status: 400 }
       );
     }

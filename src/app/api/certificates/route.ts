@@ -18,15 +18,11 @@ export async function GET(request: NextRequest) {
 
     if (verifyCode) {
       // Verify certificate
-      const { data: certificate } = await supabase
+      const { data: certificate } = await (supabase
         .from('certificates')
-        .select(`
-          *,
-          schools (name, logo_url),
-          modules (title)
-        `)
+        .select('*, schools (name, logo_url), modules (title)')
         .eq('certificate_number', verifyCode)
-        .single();
+        .single()) as any;
 
       if (!certificate) {
         return NextResponse.json({ error: 'Certificado no encontrado' }, { status: 404 });
@@ -46,15 +42,12 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user's certificates
-    const { data: certificates } = await supabase
+    const { data: certificates } = await (supabase
       .from('certificates')
-      .select(`
-        *,
-        schools (name, logo_url, primary_color, secondary_color),
-        modules (title)
-      `)
+      .select('*')
       .eq('user_id', user.id)
-      .order('issued_at', { ascending: false });
+      .order('issued_at', { ascending: false })
+      .single()) as any;
 
     return NextResponse.json({ certificates: certificates || [] });
   } catch (error: any) {
@@ -84,7 +77,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get certificate data
-    const { data: certificate } = await supabase
+    const { data: certificate } = await (supabase
       .from('certificates')
       .select(`
         *,
@@ -93,7 +86,7 @@ export async function POST(request: NextRequest) {
       `)
       .eq('id', certificateId)
       .eq('user_id', user.id)
-      .single();
+      .single()) as any;
 
     if (!certificate) {
       return NextResponse.json({ error: 'Certificado no encontrado' }, { status: 404 });
@@ -134,8 +127,8 @@ export async function POST(request: NextRequest) {
       .getPublicUrl(fileName);
 
     // Update certificate record with PDF URL
-    await supabase
-      .from('certificates')
+    await (supabase
+      .from('certificates') as any)
       .update({ pdf_url: publicUrl })
       .eq('id', certificateId);
 

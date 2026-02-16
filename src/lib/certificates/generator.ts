@@ -113,7 +113,7 @@ export async function generateCertificate(data: CertificateData): Promise<Blob> 
     parseInt(data.secondaryColor.slice(5, 7), 16)
   );
   pdf.setLineWidth(1);
-  pdf.line(30, 180, pageWidth - 30, 180, 'S');
+  pdf.line(30, 180, pageWidth - 30, 180);
 
   // Signature area
   pdf.setFontSize(10);

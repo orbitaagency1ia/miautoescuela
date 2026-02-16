@@ -9,11 +9,11 @@ export async function DELETE(
   const { id } = await params;
 
   // Get lesson to delete video file
-  const { data: lesson } = await supabase
+  const { data: lesson } = await (supabase
     .from('lessons')
     .select('video_path')
     .eq('id', id)
-    .single();
+    .single()) as any;
 
   // Delete lesson from database
   const { error } = await supabase
@@ -53,12 +53,12 @@ export async function PUT(
     }
 
     // Get school_id
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
-      .single();
+      .single()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -77,8 +77,8 @@ export async function PUT(
       );
     }
 
-    const { data, error } = await supabase
-      .from('lessons')
+    const { data, error } = await (supabase
+      .from('lessons') as any)
       .update({
         title,
         description: description || null,
@@ -115,8 +115,8 @@ export async function POST(
     const body = await request.json();
     const { is_published } = body;
 
-    const { error } = await supabase
-      .from('lessons')
+    const { error } = await (supabase
+      .from('lessons') as any)
       .update({ is_published })
       .eq('id', id);
 

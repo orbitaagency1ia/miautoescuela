@@ -100,6 +100,7 @@ export function AnalyticsClient({ primaryColor, secondaryColor, schoolName }: An
           icon={Users}
           color="blue"
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
         />
         <MetricCard
           title="Activos (7 días)"
@@ -108,6 +109,7 @@ export function AnalyticsClient({ primaryColor, secondaryColor, schoolName }: An
           icon={TrendingUp}
           color="emerald"
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
         />
         <MetricCard
           title="Total Completaciones"
@@ -116,6 +118,7 @@ export function AnalyticsClient({ primaryColor, secondaryColor, schoolName }: An
           icon={BookOpen}
           color="violet"
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
         />
         <MetricCard
           title="Promedio Progreso"
@@ -124,6 +127,7 @@ export function AnalyticsClient({ primaryColor, secondaryColor, schoolName }: An
           icon={Award}
           color="amber"
           primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
         />
       </div>
 
@@ -257,9 +261,10 @@ interface MetricCardProps {
   icon: React.ComponentType<{ className?: string }>;
   color: string;
   primaryColor: string;
+  secondaryColor: string;
 }
 
-function MetricCard({ title, value, subtitle, icon: Icon, color, primaryColor }: MetricCardProps) {
+function MetricCard({ title, value, subtitle, icon: Icon, color, primaryColor, secondaryColor }: MetricCardProps) {
   const colorClasses = {
     blue: 'from-blue-50 to-cyan-50',
     emerald: 'from-emerald-50 to-green-50',

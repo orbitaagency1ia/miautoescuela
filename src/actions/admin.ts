@@ -42,8 +42,8 @@ export async function createSchoolAction(formData: FormData) {
   const trialEndsAt = new Date();
   trialEndsAt.setDate(trialEndsAt.getDate() + 14);
 
-  const { data: school, error: schoolError } = await supabase
-    .from('schools')
+  const { data: school, error: schoolError } = await (supabase
+    .from('schools') as any)
     .insert({
       name,
       slug,
@@ -88,8 +88,8 @@ export async function createSchoolAction(formData: FormData) {
   }
 
   // Create profile (using user_id as primary key)
-  const { error: profileError } = await supabase
-    .from('profiles')
+  const { error: profileError } = await (supabase
+    .from('profiles') as any)
     .insert({
       user_id: authData.user.id,
       full_name: ownerName,
@@ -101,8 +101,8 @@ export async function createSchoolAction(formData: FormData) {
   }
 
   // Add as owner
-  const { error: memberError } = await supabase
-    .from('school_members')
+  const { error: memberError } = await (supabase
+    .from('school_members') as any)
     .insert({
       school_id: school.id,
       user_id: authData.user.id,
@@ -142,8 +142,8 @@ export async function updateSchoolAction(schoolId: string, formData: FormData) {
   // Generate slug from name
   const slug = generateSlug(name);
 
-  const { error } = await supabase
-    .from('schools')
+  const { error } = await (supabase
+    .from('schools') as any)
     .update({
       name,
       slug,

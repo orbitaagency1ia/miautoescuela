@@ -19,13 +19,13 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     }
 
     // Get user's school membership
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -38,12 +38,12 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
     const { action } = body;
 
     // Get the existing code
-    const { data: existingCode } = await supabase
+    const { data: existingCode } = await (supabase
       .from('invites')
       .select('*')
       .eq('id', codeId)
       .eq('school_id', membership.school_id)
-      .single();
+      .single()) as any;
 
     if (!existingCode) {
       return NextResponse.json(
@@ -54,8 +54,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     if (action === 'revoke') {
       // Revoke the code
-      const { error } = await supabase
-        .from('invites')
+      const { error } = await (supabase
+        .from('invites') as any)
         .update({ status: 'revoked' })
         .eq('id', codeId);
 
@@ -73,8 +73,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
       // Generate new code
       const newCode = nanoid(8).toUpperCase();
 
-      const { data: updated, error } = await supabase
-        .from('invites')
+      const { data: updated, error } = await (supabase
+        .from('invites') as any)
         .update({
           token_hash: newCode,
           email: `${newCode}@code`,
@@ -103,8 +103,8 @@ export async function PATCH(request: NextRequest, context: RouteContext) {
 
     if (action === 'activate') {
       // Reactivate a revoked code
-      const { error } = await supabase
-        .from('invites')
+      const { error } = await (supabase
+        .from('invites') as any)
         .update({ status: 'active' })
         .eq('id', codeId);
 
@@ -144,13 +144,13 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     // Get user's school membership
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -160,8 +160,8 @@ export async function DELETE(request: NextRequest, context: RouteContext) {
     }
 
     // Delete the code
-    const { error } = await supabase
-      .from('invites')
+    const { error } = await (supabase
+      .from('invites') as any)
       .delete()
       .eq('id', codeId)
       .eq('school_id', membership.school_id);

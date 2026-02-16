@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import {
   Code,
@@ -170,7 +171,7 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
         title: 'Error',
         description: 'No se pudo actualizar el código',
         variant: 'destructive',
-      });
+        });
     }
   };
 
@@ -201,9 +202,9 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
       toast({
         title: 'Error',
         description: 'No se pudo eliminar el código',
-        variant: 'destructive',
-      });
-    }
+          variant: 'destructive',
+        });
+      }
   };
 
   const getStatusBadge = (code: JoinCode) => {
@@ -242,12 +243,6 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
       <CardHeader className="relative">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <div
-              className="p-2 rounded-xl"
-              style={{ backgroundColor: `${primaryColor}15` }}
-            >
-              <Code className="h-5 w-5" style={{ color: primaryColor }} />
-            </div>
             Gestión de Códigos de Acceso
           </CardTitle>
 
@@ -303,27 +298,25 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
 
                 <div className="space-y-2">
                   <Label htmlFor="maxUses">Máximo de usos</Label>
-                  <input
+                  <Input
                     id="maxUses"
                     type="number"
                     min="1"
                     max="1000"
                     value={newMaxUses}
                     onChange={(e) => setNewMaxUses(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="expiresIn">Vigencia (días)</Label>
-                  <input
+                  <Input
                     id="expiresIn"
                     type="number"
                     min="1"
                     max="365"
                     value={newExpiresInDays}
                     onChange={(e) => setNewExpiresInDays(parseInt(e.target.value))}
-                    className="w-full px-3 py-2 border rounded-md"
                   />
                 </div>
 
@@ -336,16 +329,16 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
                   }}
                 >
                   {creatingCode ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Creando...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="mr-2 h-4 w-4" />
-                      Crear Código
-                    </>
-                  )}
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creando...
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="mr-2 h-4 w-4" />
+                        Crear Código
+                      </>
+                    )}
                 </Button>
               </div>
             </DialogContent>
@@ -387,35 +380,41 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
                 style={{ borderColor: `${primaryColor}20` }}
               >
                 <div className="flex items-center gap-4">
-                  {/* Code Display */}
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center font-mono text-lg font-bold"
+                    style={{
+                      backgroundColor: `${primaryColor}10`,
+                      color: primaryColor,
+                    }}
+                  >
+                    {code.code}
+                  </div>
+
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
-                      <code
-                        className="px-3 py-1 rounded-lg font-mono text-lg font-bold"
-                        style={{
-                          backgroundColor: `${primaryColor}10`,
-                          color: primaryColor,
-                        }}
-                      >
-                        {code.code}
-                      </code>
-                      {getStatusBadge(code)}
+                    <div className="flex flex-col gap-2 mb-1">
+                      <p className="font-semibold text-slate-700">{code.code}</p>
+                      <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', code.status === 'active' ? 'bg-emerald-100 text-emerald-700' : code.status === 'revoked' || isPast(new Date(code.expiresAt)) ? 'bg-red-50 text-red-700' : 'bg-slate-100 text-slate-600')}>
+                        {code.status === 'active' ? 'Activo' : code.status === 'revoked' ? 'Revocado' : 'Expirado'}
+                      </span>
                     </div>
+
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1.5">
-                        <Users className="h-4 w-4" />
-                        <span>{code.usedCount} / {code.maxUses} usos</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Calendar className="h-4 w-4" />
-                        <span>
-                          Expira: {format(new Date(code.expiresAt), 'dd MMM yyyy', { locale: es })}
-                        </span>
-                      </div>
+                      <Users className="h-4 w-4" />
+                      <span>{code.usedCount} / {code.maxUses} usos</span>
+                    </div>
+
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <Calendar className="h-4 w-4" />
+                      <span>
+                        Expira: {format(new Date(code.expiresAt), 'dd MMM yyyy', { locale: es })}
+                      </span>
                     </div>
                   </div>
 
-                  {/* Actions */}
+                  <div className="flex-1">
+                    {getStatusBadge(code)}
+                  </div>
+
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
@@ -429,6 +428,7 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
                         <Copy className="h-4 w-4" />
                       )}
                     </Button>
+
                     <Button
                       size="sm"
                       variant="outline"
@@ -454,7 +454,7 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
                             <Ban className="mr-2 h-4 w-4" />
                             Revocar
                           </DropdownMenuItem>
-                        ) : (
+                          ) : (
                           <DropdownMenuItem onClick={() => updateCode(code.id, 'activate')}>
                             <Check className="mr-2 h-4 w-4" />
                             Activar
@@ -473,19 +473,6 @@ export function JoinCodesManager({ primaryColor, secondaryColor }: JoinCodesMana
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
-                  </div>
-                </div>
-
-                {/* Progress Bar */}
-                <div className="mt-3">
-                  <div className="h-2 rounded-full bg-slate-200 overflow-hidden">
-                    <div
-                      className="h-full rounded-full transition-all duration-300"
-                      style={{
-                        width: `${Math.min((code.usedCount / code.maxUses) * 100, 100)}%`,
-                        backgroundColor: primaryColor,
-                      }}
-                    />
                   </div>
                 </div>
               </div>

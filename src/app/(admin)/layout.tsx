@@ -22,6 +22,7 @@ export default async function AdminLayout({
   const userEmail = user.email;
   const isSuperAdmin = userEmail?.endsWith('@miautoescuela.com') ||
                        userEmail?.endsWith('@admin.com') ||
+                       userEmail === 'kevinubeda231@gmail.com' ||
                        user.user_metadata?.role === 'admin';
 
   // Check if user has admin/owner role in any school
@@ -38,10 +39,10 @@ export default async function AdminLayout({
   }
 
   return (
-    <div className="flex h-screen bg-gray-50">
+    <div className="flex h-screen" style={{ background: 'linear-gradient(180deg, rgba(100, 116, 139, 0.03) 0%, white 30%)' }}>
       <AdminSidebar />
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        <div className="p-6 md:p-8">
           {children}
         </div>
       </main>

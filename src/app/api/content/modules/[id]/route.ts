@@ -8,8 +8,8 @@ export async function DELETE(
   const supabase = await createClient();
   const { id } = await params;
 
-  const { error } = await supabase
-    .from('modules')
+  const { error } = await (supabase
+    .from('modules') as any)
     .delete()
     .eq('id', id);
 
@@ -34,8 +34,8 @@ export async function POST(
     const body = await request.json();
     const { is_published } = body;
 
-    const { error } = await supabase
-      .from('modules')
+    const { error } = await (supabase
+      .from('modules') as any)
       .update({ is_published })
       .eq('id', id);
 

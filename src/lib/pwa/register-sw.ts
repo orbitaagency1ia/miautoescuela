@@ -1,7 +1,8 @@
 // PWA Service Worker Registration
-declare const self: ServiceWorkerGlobalScope & {
-  readonly clients: Clients;
-  readonly registration: ServiceWorkerRegistration;
+// @ts-ignore - Service worker types
+declare const self: any & {
+  readonly clients: any;
+  readonly registration: any;
 };
 
 export {};

@@ -10,18 +10,16 @@ const Dialog = ({
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
 }) => {
+  if (!open) return null;
+
   return (
-    <>
-      {open && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-          <div
-            className="fixed inset-0 bg-black/50"
-            onClick={() => onOpenChange(false)}
-          />
-          <div className="relative z-50">{children}</div>
-        </div>
-      )}
-    </>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm transition-opacity duration-200"
+        onClick={() => onOpenChange(false)}
+      />
+      <div className="relative z-50 max-h-[90vh] overflow-y-auto">{children}</div>
+    </div>
   );
 };
 
@@ -32,7 +30,7 @@ const DialogContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'relative bg-background rounded-lg shadow-lg p-6 w-full max-w-md',
+      'relative bg-white rounded-2xl shadow-xl p-8 w-full max-w-md',
       className
     )}
     {...props}
@@ -41,7 +39,7 @@ const DialogContent = React.forwardRef<
     {onClose && (
       <button
         onClick={onClose}
-        className="absolute right-4 top-4 rounded-sm opacity-70 hover:opacity-100"
+        className="absolute right-4 top-4 p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
       >
         ✕
       </button>
@@ -55,7 +53,7 @@ const DialogHeader = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)}
+    className={cn('flex flex-col space-y-2 text-left', className)}
     {...props}
   />
 );
@@ -67,7 +65,7 @@ const DialogTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <h2
     ref={ref}
-    className={cn('text-lg font-semibold leading-none tracking-tight', className)}
+    className={cn('text-xl font-semibold text-slate-900 leading-tight', className)}
     {...props}
   />
 ));
@@ -79,7 +77,7 @@ const DialogDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
+    className={cn('text-sm text-slate-500', className)}
     {...props}
   />
 ));
@@ -90,11 +88,45 @@ const DialogFooter = ({
   ...props
 }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
-    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-3 gap-3 pt-4', className)}
     {...props}
   />
 );
 DialogFooter.displayName = 'DialogFooter';
+
+const DialogClose = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ onClick, ...props }, ref) => (
+  <button
+    ref={ref}
+    type="button"
+    onClick={onClick}
+    className="absolute right-4 top-4 p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-all"
+    {...props}
+  >
+    ✕
+  </button>
+));
+DialogClose.displayName = 'DialogClose';
+
+const DialogTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement> & { asChild?: boolean; children?: React.ReactNode }
+>(({ asChild = false, children, ...props }, ref) => {
+  if (asChild && React.isValidElement(children)) {
+    return React.cloneElement(children as React.ReactElement<any>, {
+      ...props,
+    });
+  }
+
+  return (
+    <button ref={ref} {...props}>
+      {children}
+    </button>
+  );
+});
+DialogTrigger.displayName = 'DialogTrigger';
 
 export {
   Dialog,
@@ -103,4 +135,6 @@ export {
   DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogClose,
+  DialogTrigger,
 };

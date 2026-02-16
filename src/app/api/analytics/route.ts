@@ -12,13 +12,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user's school membership
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -35,18 +35,18 @@ export async function GET(request: NextRequest) {
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
     // Get all students
-    const { data: students, error: studentsError } = await supabase
+    const { data: students, error: studentsError } = await (supabase
       .from('school_members')
       .select('user_id, joined_at, status')
       .eq('school_id', schoolId)
-      .eq('role', 'student');
+      .eq('role', 'student')) as any;
 
     if (studentsError) {
       return NextResponse.json({ error: 'Error al obtener alumnos' }, { status: 500 });
     }
 
     // Get modules and lessons
-    const { data: modules } = await supabase
+    const { data: modules } = await (supabase
       .from('modules')
       .select(`
         id,
@@ -58,7 +58,7 @@ export async function GET(request: NextRequest) {
         )
       `)
       .eq('school_id', schoolId)
-      .eq('is_published', true);
+      .eq('is_published', true)) as any;
 
     const lessons = modules?.flatMap((m: any) => m.lessons?.filter((l: any) => l.is_published) || []) || [];
     const lessonIds = lessons.map((l: any) => l.id);
@@ -67,11 +67,11 @@ export async function GET(request: NextRequest) {
     // Get lesson progress
     let lessonProgress: any[] = [];
     if (lessonIds.length > 0 && userIds.length > 0) {
-      const { data: progress } = await supabase
+      const { data: progress } = await (supabase
         .from('lesson_progress')
         .select('lesson_id, user_id, completed_at, progress_percent, last_watched_at')
         .in('lesson_id', lessonIds)
-        .in('user_id', userIds);
+        .in('user_id', userIds)) as any;
       lessonProgress = progress || [];
     }
 

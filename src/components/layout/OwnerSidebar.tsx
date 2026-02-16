@@ -65,32 +65,32 @@ export function OwnerSidebar({ schoolName: propSchoolName }: { schoolName?: stri
         setUserName(user.user_metadata?.full_name || user.email?.split('@')[0] || '');
 
         // Get user's school membership
-        const { data: membership } = await supabase
+        const { data: membership } = await (supabase
           .from('school_members')
           .select('school_id')
           .eq('user_id', user.id)
           .eq('status', 'active')
           .eq('role', 'owner')
-          .maybeSingle();
+          .maybeSingle()) as any;
 
         if (membership?.school_id) {
           // Get school data for logo and name
-          const { data: school } = await supabase
+          const { data: school } = await (supabase
             .from('schools')
             .select('id, name, logo_url')
             .eq('id', membership.school_id)
-            .maybeSingle();
+            .maybeSingle()) as any;
 
           if (school) {
             setSchoolData(school);
           }
 
           // Get active students count
-          const { data: students } = await supabase
+          const { data: students } = await (supabase
             .from('school_members')
             .select('user_id')
             .eq('school_id', membership.school_id)
-            .eq('role', 'student');
+            .eq('role', 'student')) as any;
 
           setActiveStudents(students?.length || 0);
         }

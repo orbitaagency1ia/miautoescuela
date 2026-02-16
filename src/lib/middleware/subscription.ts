@@ -20,11 +20,11 @@ export async function checkSchoolAccess(schoolId: string): Promise<{
 }> {
   const supabase = await createClient();
 
-  const { data: school } = await supabase
+  const { data: school } = await (supabase
     .from('schools')
     .select('id, name, subscription_status, trial_ends_at')
     .eq('id', schoolId)
-    .single();
+    .single()) as any;
 
   if (!school) {
     return { allowed: false, reason: 'School not found' };
@@ -75,12 +75,12 @@ export async function checkUserSchoolAccess(userId: string, schoolId: string): P
 }> {
   const supabase = await createClient();
 
-  const { data: member } = await supabase
+  const { data: member } = await (supabase
     .from('school_members')
     .select('id, role, status, school_id')
     .eq('user_id', userId)
     .eq('school_id', schoolId)
-    .single();
+    .single()) as any;
 
   if (!member) {
     return { allowed: false, reason: 'Not a member of this school' };
@@ -109,9 +109,7 @@ export async function protectSchoolRoute(request: Request, schoolIdParam: string
   }
 
   // Obtener school_id del parámetro URL
-  const schoolId = request.headers.get('x-school-id') ||
-                      (await request.headers()).get('x-school-id') ||
-                      schoolIdParam;
+  const schoolId = request.headers.get('x-school-id') || schoolIdParam;
 
   if (!schoolId) {
     return NextResponse.json({ error: 'School ID required' }, { status: 400 });

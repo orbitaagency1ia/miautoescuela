@@ -64,10 +64,10 @@ export function VideoUploadDialog({
       return;
     }
 
-    // Validate file size (max 500MB)
-    const maxSize = 500 * 1024 * 1024;
+    // Validate file size (max 5GB)
+    const maxSize = 5 * 1024 * 1024 * 1024; // 5GB
     if (file.size > maxSize) {
-      setError('El video es demasiado grande. Máximo 500MB');
+      setError('El video es demasiado grande. Máximo 5GB');
       return;
     }
 
@@ -172,12 +172,12 @@ export function VideoUploadDialog({
           throw new Error('No autenticado');
         }
 
-        const { data: membership } = await supabase
+        const { data: membership } = await (supabase
           .from('school_members')
           .select('school_id')
           .eq('user_id', user.id)
           .eq('status', 'active')
-          .single();
+          .single()) as any;
 
         if (!membership) {
           throw new Error('No tienes acceso a ninguna autoescuela');
@@ -307,7 +307,7 @@ export function VideoUploadDialog({
                     </div>
                     <div className="flex items-center gap-2 text-xs text-slate-400">
                       <FileVideo className="h-3 w-3" />
-                      <span>MP4, WebM, MOV • Máx. 500MB</span>
+                      <span>MP4, WebM, MOV • Máx. 5GB</span>
                     </div>
                   </div>
                 </div>

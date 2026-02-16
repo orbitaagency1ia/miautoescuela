@@ -1,4 +1,3 @@
-/// <reference types="vinxi/types/client" />
 import { startTransition, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { setupInstallPrompt } from '@/lib/pwa/register-sw'
@@ -15,7 +14,7 @@ export default function PWAProvider({ children }: RootLayoutProps) {
   useEffect(() => {
     // Only setup PWA in production/browser
     if (typeof window === 'undefined') return
-    if (import.meta.env.DEV) return
+    if (process.env.NODE_ENV === 'development') return
 
     setupInstallPrompt()
 

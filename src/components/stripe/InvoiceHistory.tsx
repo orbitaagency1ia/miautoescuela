@@ -78,8 +78,8 @@ export function InvoiceHistory({ hasActiveSubscription, primaryColor, secondaryC
     : '-';
 
   return (
-    <Card className="rounded-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.04)] overflow-hidden">
-      <div className="border-b bg-gradient-to-r from-slate-50 to-slate-100 p-5">
+    <Card className="rounded-3xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden border-2 border-slate-100">
+      <div className="border-b-2 bg-gradient-to-r from-slate-50 to-slate-100 p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div
@@ -102,7 +102,7 @@ export function InvoiceHistory({ hasActiveSubscription, primaryColor, secondaryC
         {/* Next Billing */}
         {subscription && !subscription.cancel_at_period_end && (
           <div
-            className="mb-4 p-4 rounded-xl flex items-center justify-between"
+            className="mb-4 p-4 rounded-2xl flex items-center justify-between border-2"
             style={{ backgroundColor: `${primaryColor}10`, borderColor: `${primaryColor}30` }}
           >
             <div>
@@ -130,7 +130,7 @@ export function InvoiceHistory({ hasActiveSubscription, primaryColor, secondaryC
             {invoices.map((invoice) => (
               <div
                 key={invoice.id}
-                className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:border-blue-200 hover:bg-slate-50 transition-all"
+                className="flex items-center justify-between p-3 rounded-xl border-2 border-slate-100 hover:border-blue-200 hover:bg-slate-50 transition-all"
               >
                 <div className="flex items-center gap-4">
                   <div className="text-right">

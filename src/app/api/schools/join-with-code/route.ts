@@ -24,13 +24,13 @@ export async function POST(request: NextRequest) {
 
     // Buscar la invitación por el código
     // Primero buscamos por una invite que coincida con el código
-    const { data: invite, error: inviteError } = await supabase
+    const { data: invite, error: inviteError } = await (supabase
       .from('invites')
       .select('*')
       .eq('token_hash', trimmedCode)
       .is('used_at', null)
       .gte('expires_at', new Date().toISOString())
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (inviteError || !invite) {
       console.error('Error buscando invitación:', inviteError);
@@ -41,12 +41,12 @@ export async function POST(request: NextRequest) {
     }
 
     // Verificar que el usuario no esté ya en esa escuela
-    const { data: existingMember } = await supabase
+    const { data: existingMember } = await (supabase
       .from('school_members')
       .select('*')
       .eq('user_id', user.id)
       .eq('school_id', invite.school_id)
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (existingMember) {
       return NextResponse.json(
@@ -56,16 +56,16 @@ export async function POST(request: NextRequest) {
     }
 
     // Crear perfil si no existe
-    const { data: profile } = await supabase
+    const { data: profile } = await (supabase
       .from('profiles')
       .select('user_id')
       .eq('user_id', user.id)
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!profile) {
       // El perfil no existe, crearlo
-      await supabase
-        .from('profiles')
+      await (supabase
+        .from('profiles') as any)
         .insert({
           user_id: user.id,
           full_name: user.user_metadata?.full_name || user.email || '',
@@ -74,8 +74,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Añadir usuario a la escuela con el rol de la invitación
-    const { error: memberError } = await supabase
-      .from('school_members')
+    const { error: memberError } = await (supabase
+      .from('school_members') as any)
       .insert({
         user_id: user.id,
         school_id: invite.school_id,
@@ -91,8 +91,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Marcar la invitación como usada
-    await supabase
-      .from('invites')
+    await (supabase
+      .from('invites') as any)
       .update({ used_at: new Date().toISOString() })
       .eq('token_hash', trimmedCode);
 

@@ -40,8 +40,8 @@ export async function POST(request: NextRequest) {
           const subscriptionId = session.subscription as string;
 
           // Update school with subscription info
-          await supabase
-            .from('schools')
+          await (supabase
+            .from('schools') as any)
             .update({
               stripe_subscription_id: subscriptionId,
               stripe_customer_id: session.customer as string,
@@ -64,8 +64,8 @@ export async function POST(request: NextRequest) {
             ? subscription.status
             : 'past_due';
 
-          await supabase
-            .from('schools')
+          await (supabase
+            .from('schools') as any)
             .update({
               subscription_status: status,
             })
@@ -80,8 +80,8 @@ export async function POST(request: NextRequest) {
         const schoolId = subscription.metadata?.school_id;
 
         if (schoolId) {
-          await supabase
-            .from('schools')
+          await (supabase
+            .from('schools') as any)
             .update({
               subscription_status: 'canceled',
               stripe_subscription_id: null,
@@ -103,8 +103,8 @@ export async function POST(request: NextRequest) {
           const schoolId = subscription.metadata?.school_id;
 
           if (schoolId && subscription.status === 'active') {
-            await supabase
-              .from('schools')
+            await (supabase
+              .from('schools') as any)
               .update({
                 subscription_status: 'active',
               })
@@ -126,8 +126,8 @@ export async function POST(request: NextRequest) {
           const schoolId = subscription.metadata?.school_id;
 
           if (schoolId) {
-            await supabase
-              .from('schools')
+            await (supabase
+              .from('schools') as any)
               .update({
                 subscription_status: 'past_due',
               })

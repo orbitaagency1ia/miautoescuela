@@ -2,11 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Building2, Plus, X, AlertCircle } from 'lucide-react';
+import { Building2, Plus, X, AlertCircle, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { cn } from '@/lib/utils';
 
 export function CreateSchoolDialog() {
   const router = useRouter();
@@ -70,141 +71,203 @@ export function CreateSchoolDialog() {
     <>
       <Button
         onClick={() => setIsOpen(true)}
-        className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white"
+        className="rounded-full px-6 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium"
       >
         <Plus className="mr-2 h-4 w-4" />
         Nueva Autoescuela
       </Button>
 
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="sm:max-w-[500px] p-0 gap-0 overflow-hidden">
-          {/* Header */}
-          <div className="px-6 py-5 border-b border-gray-100">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-blue-50">
-                  <Building2 className="h-5 w-5 text-blue-600" />
+        <DialogContent className="max-w-[550px]">
+          <DialogHeader>
+            <div className="flex items-start justify-between">
+              <div className="flex items-center gap-4">
+                <div className="p-3 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-600">
+                  <Building2 className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-900">Crear Nueva Autoescuela</h2>
-                  <p className="text-sm text-gray-500">Crea una nueva autoescuela y asigna un propietario</p>
+                  <DialogTitle>Crear Nueva Autoescuela</DialogTitle>
+                  <DialogDescription>
+                    Crea una nueva autoescuela y asigna un propietario
+                  </DialogDescription>
                 </div>
               </div>
-              <button
-                onClick={handleClose}
-                className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              >
-                <X className="h-5 w-5 text-gray-400" />
-              </button>
+              <DialogClose onClick={() => handleClose()} />
             </div>
-          </div>
+          </DialogHeader>
 
           <form onSubmit={handleSubmit}>
-            <div className="px-6 py-5 space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="text-sm font-medium text-gray-700">
-                  Nombre de la Autoescuela <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  placeholder="Autoescuela Madrid"
-                  required
-                  disabled={loading}
-                  className="h-10 rounded-xl border-gray-200"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="contactEmail" className="text-sm font-medium text-gray-700">
-                  Email de Contacto <span className="text-red-500">*</span>
-                </Label>
-                <Input
-                  id="contactEmail"
-                  type="email"
-                  value={formData.contactEmail}
-                  onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                  placeholder="info@autoescuela.com"
-                  required
-                  disabled={loading}
-                  className="h-10 rounded-xl border-gray-200"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="phone" className="text-sm font-medium text-gray-700">
-                  Teléfono
-                </Label>
-                <Input
-                  id="phone"
-                  type="tel"
-                  value={formData.phone}
-                  onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  placeholder="+34 600 000 000"
-                  disabled={loading}
-                  className="h-10 rounded-xl border-gray-200"
-                />
-              </div>
-              <div className="border-t border-gray-100 pt-4">
-                <h3 className="font-medium text-gray-900 mb-3">Propietario</h3>
-                <div className="space-y-2">
-                  <Label htmlFor="ownerName" className="text-sm font-medium text-gray-700">
-                    Nombre Completo <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="ownerName"
-                    value={formData.ownerName}
-                    onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
-                    placeholder="Juan Pérez"
-                    required
-                    disabled={loading}
-                    className="h-10 rounded-xl border-gray-200"
-                  />
-                </div>
-                <div className="space-y-2 mt-3">
-                  <Label htmlFor="ownerEmail" className="text-sm font-medium text-gray-700">
-                    Email del Propietario <span className="text-red-500">*</span>
-                  </Label>
-                  <Input
-                    id="ownerEmail"
-                    type="email"
-                    value={formData.ownerEmail}
-                    onChange={(e) => setFormData({ ...formData, ownerEmail: e.target.value })}
-                    placeholder="propietario@autoescuela.com"
-                    required
-                    disabled={loading}
-                    className="h-10 rounded-xl border-gray-200"
-                  />
-                </div>
-                <p className="text-xs text-gray-500 mt-2">
-                  Se creará una cuenta con una contraseña temporal que se enviará por email.
-                </p>
-              </div>
-
+            <div className="px-8 py-6 space-y-5">
               {error && (
-                <div className="flex items-start gap-3 p-3 rounded-xl bg-red-50 border border-red-200">
-                  <AlertCircle className="h-5 w-5 text-red-500 flex-shrink-0 mt-0.5" />
-                  <p className="text-sm text-red-700">{error}</p>
+                <div className="flex items-start gap-3 p-4 rounded-xl bg-red-50">
+                  <div className="p-1 rounded-lg bg-red-100 shrink-0">
+                    <X className="h-4 w-4 text-red-600" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-red-900">Error</p>
+                    <p className="text-sm text-red-700 mt-1">{error}</p>
+                  </div>
                 </div>
               )}
+
+              {/* Info Box */}
+              <div className="bg-blue-50 text-blue-700 px-4 py-3 rounded-xl text-sm flex items-start gap-3">
+                <Info className="h-5 w-5 text-blue-500 flex-shrink-0 mt-0.5" />
+                <div>
+                  <p className="font-medium mb-1">Información importante</p>
+                  <p className="text-blue-600">Completa todos los campos obligatorios para crear la autoescuela</p>
+                </div>
+              </div>
+
+              {/* School Info Section */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 pb-2">
+                  <div className="p-1.5 rounded-lg bg-blue-100">
+                    <Building2 className="h-4 w-4 text-blue-600" />
+                  </div>
+                  <h3 className="font-bold text-slate-900">Información de la Autoescuela</h3>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm font-semibold text-slate-700">
+                    Nombre de la Autoescuela <span className="text-red-500">*</span>
+                  </Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    placeholder="Autoescuela Madrid"
+                    className={cn(
+                      "h-12 rounded-xl text-slate-900 text-base",
+                      "bg-slate-50 hover:bg-white",
+                      "focus:ring-2 focus:ring-blue-100 focus:border-blue-500",
+                      "placeholder:text-slate-400",
+                      "transition-all duration-200"
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="contactEmail" className="text-sm font-semibold text-slate-700">
+                      Email de Contacto <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="contactEmail"
+                      type="email"
+                      value={formData.contactEmail}
+                      onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                      placeholder="info@autoescuela.com"
+                      className={cn(
+                        "h-12 rounded-xl text-slate-900 text-base",
+                        "bg-slate-50 hover:bg-white",
+                        "focus:ring-2 focus:ring-blue-100 focus:border-blue-500",
+                        "placeholder:text-slate-400",
+                        "transition-all duration-200"
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="phone" className="text-sm font-semibold text-slate-700">
+                      Teléfono
+                    </Label>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      placeholder="+34 600 000 000"
+                      className={cn(
+                        "h-12 rounded-xl text-slate-900 text-base",
+                        "bg-slate-50 hover:bg-white",
+                        "focus:ring-2 focus:ring-blue-100 focus:border-blue-500",
+                        "placeholder:text-slate-400",
+                        "transition-all duration-200"
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Owner Section */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center gap-2 pb-2">
+                  <div className="p-1.5 rounded-lg bg-emerald-100">
+                    <Plus className="h-4 w-4 text-emerald-600" />
+                  </div>
+                  <h3 className="font-bold text-slate-900">Propietario</h3>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ownerName" className="text-sm font-semibold text-slate-700">
+                      Nombre Completo <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="ownerName"
+                      value={formData.ownerName}
+                      onChange={(e) => setFormData({ ...formData, ownerName: e.target.value })}
+                      placeholder="Juan Pérez"
+                      className={cn(
+                        "h-12 rounded-xl text-slate-900 text-base",
+                        "bg-slate-50 hover:bg-white",
+                        "focus:ring-2 focus:ring-blue-100 focus:border-blue-500",
+                        "placeholder:text-slate-400",
+                        "transition-all duration-200"
+                      )}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="ownerEmail" className="text-sm font-semibold text-slate-700">
+                      Email del Propietario <span className="text-red-500">*</span>
+                    </Label>
+                    <Input
+                      id="ownerEmail"
+                      type="email"
+                      value={formData.ownerEmail}
+                      onChange={(e) => setFormData({ ...formData, ownerEmail: e.target.value })}
+                      placeholder="propietario@autoescuela.com"
+                      className={cn(
+                        "h-12 rounded-xl text-slate-900 text-base",
+                        "bg-slate-50 hover:bg-white",
+                        "focus:ring-2 focus:ring-blue-100 focus:border-blue-500",
+                        "placeholder:text-slate-400",
+                        "transition-all duration-200"
+                      )}
+                    />
+                  </div>
+                </div>
+
+                <div className="bg-emerald-50 text-emerald-700 px-4 py-3 rounded-xl text-sm flex items-start gap-3">
+                  <Info className="h-5 w-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-medium mb-1">Cuenta de propietario</p>
+                    <p className="text-emerald-600">Se creará una cuenta con una contraseña temporal que se enviará por email.</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-end gap-3">
+
+            <DialogFooter>
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleClose}
                 disabled={loading}
-                className="rounded-xl h-10 px-5 text-sm"
+                className="rounded-full px-6 h-12"
               >
                 Cancelar
               </Button>
               <Button
                 type="submit"
                 disabled={loading}
-                className="rounded-xl h-10 px-5 text-sm bg-blue-600 hover:bg-blue-700 text-white"
+                className="rounded-full px-6 h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-medium"
               >
                 {loading ? 'Creando...' : 'Crear Autoescuela'}
               </Button>
-            </div>
+            </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>

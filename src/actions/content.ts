@@ -8,8 +8,8 @@ import { TOAST_MESSAGES } from '@/lib/constants';
 // TEMPORAL: Helper para obtener school_id sin autenticación
 async function getSchoolId() {
   const supabase = await createClient();
-  const { data: school } = await supabase
-    .from('schools')
+  const { data: school } = await (supabase
+    .from('schools') as any)
     .select('id')
     .limit(1)
     .maybeSingle();
@@ -39,8 +39,8 @@ export async function createModuleAction(formData: FormData) {
   }
 
   // Get current max order_index
-  const { data: lastModule } = await supabase
-    .from('modules')
+  const { data: lastModule } = await (supabase
+    .from('modules') as any)
     .select('order_index')
     .eq('school_id', schoolId)
     .order('order_index', { ascending: false })
@@ -49,8 +49,8 @@ export async function createModuleAction(formData: FormData) {
 
   const newOrderIndex = (lastModule?.order_index ?? -1) + 1;
 
-  const { error } = await supabase
-    .from('modules')
+  const { error } = await (supabase
+    .from('modules') as any)
     .insert({
       school_id: schoolId,
       title,
@@ -83,8 +83,8 @@ export async function updateModuleAction(moduleId: string, formData: FormData) {
     throw new Error(TOAST_MESSAGES.ERROR_REQUIRED_FIELD);
   }
 
-  const { error } = await supabase
-    .from('modules')
+  const { error } = await (supabase
+    .from('modules') as any)
     .update({
       title,
       description: description || null,
@@ -108,8 +108,8 @@ export async function updateModuleAction(moduleId: string, formData: FormData) {
 export async function deleteModuleAction(moduleId: string) {
   const supabase = await createClient();
 
-  const { error } = await supabase
-    .from('modules')
+  const { error } = await (supabase
+    .from('modules') as any)
     .delete()
     .eq('id', moduleId);
 
@@ -142,8 +142,8 @@ export async function createLessonAction(formData: FormData) {
   }
 
   // Get current max order_index for this module
-  const { data: lastLesson } = await supabase
-    .from('lessons')
+  const { data: lastLesson } = await (supabase
+    .from('lessons') as any)
     .select('order_index')
     .eq('module_id', moduleId)
     .order('order_index', { ascending: false })
@@ -172,8 +172,8 @@ export async function createLessonAction(formData: FormData) {
     videoPath = uploadData?.path || null;
   }
 
-  const { error } = await supabase
-    .from('lessons')
+  const { error } = await (supabase
+    .from('lessons') as any)
     .insert({
       school_id: schoolId,
       module_id: moduleId,
@@ -208,8 +208,8 @@ export async function updateLessonAction(lessonId: string, formData: FormData) {
     throw new Error(TOAST_MESSAGES.ERROR_REQUIRED_FIELD);
   }
 
-  const { error } = await supabase
-    .from('lessons')
+  const { error } = await (supabase
+    .from('lessons') as any)
     .update({
       title,
       description: description || null,
@@ -234,15 +234,15 @@ export async function deleteLessonAction(lessonId: string) {
   const supabase = await createClient();
 
   // Get lesson to delete video file
-  const { data: lesson } = await supabase
-    .from('lessons')
+  const { data: lesson } = await (supabase
+    .from('lessons') as any)
     .select('video_path')
     .eq('id', lessonId)
     .single();
 
   // Delete lesson from database
-  const { error } = await supabase
-    .from('lessons')
+  const { error } = await (supabase
+    .from('lessons') as any)
     .delete()
     .eq('id', lessonId);
 
@@ -267,8 +267,8 @@ export async function deleteLessonAction(lessonId: string) {
 export async function toggleModulePublishAction(moduleId: string, currentState: boolean) {
   const supabase = await createClient();
 
-  const { error } = await supabase
-    .from('modules')
+  const { error } = await (supabase
+    .from('modules') as any)
     .update({ is_published: !currentState })
     .eq('id', moduleId);
 
@@ -287,8 +287,8 @@ export async function toggleModulePublishAction(moduleId: string, currentState: 
 export async function toggleLessonPublishAction(lessonId: string, currentState: boolean) {
   const supabase = await createClient();
 
-  const { error } = await supabase
-    .from('lessons')
+  const { error } = await (supabase
+    .from('lessons') as any)
     .update({ is_published: !currentState })
     .eq('id', lessonId);
 
@@ -319,8 +319,8 @@ export async function markLessonCompleteAction(lessonId: string) {
   }
 
   // Get user's school membership
-  const { data: membership } = await supabase
-    .from('school_members')
+  const { data: membership } = await (supabase
+    .from('school_members') as any)
     .select('school_id')
     .eq('user_id', user.id)
     .eq('status', 'active')
@@ -331,8 +331,8 @@ export async function markLessonCompleteAction(lessonId: string) {
   }
 
   // Get lesson details to verify it belongs to user's school and get module_id
-  const { data: lesson } = await supabase
-    .from('lessons')
+  const { data: lesson } = await (supabase
+    .from('lessons') as any)
     .select('school_id, module_id')
     .eq('id', lessonId)
     .single();
@@ -346,16 +346,16 @@ export async function markLessonCompleteAction(lessonId: string) {
   }
 
   // Ensure profile exists (for users registered before profile creation)
-  const { data: existingProfile } = await supabase
-    .from('profiles')
+  const { data: existingProfile } = await (supabase
+    .from('profiles') as any)
     .select('user_id, activity_points')
     .eq('user_id', user.id)
     .maybeSingle();
 
   if (!existingProfile) {
     // Create profile if it doesn't exist
-    await supabase
-      .from('profiles')
+    await (supabase
+      .from('profiles') as any)
       .insert({
         user_id: user.id,
         full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
@@ -364,8 +364,8 @@ export async function markLessonCompleteAction(lessonId: string) {
   }
 
   // Check if already completed
-  const { data: existingProgress } = await supabase
-    .from('lesson_progress')
+  const { data: existingProgress } = await (supabase
+    .from('lesson_progress') as any)
     .select('*')
     .eq('user_id', user.id)
     .eq('lesson_id', lessonId)
@@ -373,8 +373,8 @@ export async function markLessonCompleteAction(lessonId: string) {
 
   if (existingProgress) {
     // Already completed, remove progress (toggle off)
-    const { error: deleteError } = await supabase
-      .from('lesson_progress')
+    const { error: deleteError } = await (supabase
+      .from('lesson_progress') as any)
       .delete()
       .eq('user_id', user.id)
       .eq('lesson_id', lessonId);
@@ -386,16 +386,16 @@ export async function markLessonCompleteAction(lessonId: string) {
 
     // Remove activity points (10 points per lesson)
     const currentPoints = existingProfile?.activity_points || 0;
-    await supabase
-      .from('profiles')
+    await (supabase
+      .from('profiles') as any)
       .update({
         activity_points: Math.max(0, currentPoints - 10)
       })
       .eq('user_id', user.id);
   } else {
     // Not completed, add progress (toggle on)
-    const { error: insertError } = await supabase
-      .from('lesson_progress')
+    const { error: insertError } = await (supabase
+      .from('lesson_progress') as any)
       .insert({
         school_id: lesson.school_id,
         user_id: user.id,
@@ -411,8 +411,8 @@ export async function markLessonCompleteAction(lessonId: string) {
 
     // Award activity points (10 points per lesson)
     const currentPoints = existingProfile?.activity_points || 0;
-    await supabase
-      .from('profiles')
+    await (supabase
+      .from('profiles') as any)
       .update({
         activity_points: currentPoints + 10
       })

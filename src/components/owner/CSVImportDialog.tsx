@@ -153,8 +153,8 @@ export function CSVImportDialog({
               onDragOver={handleDrag}
               onDrop={handleDrop}
               className={cn(
-                'border-2 border-dashed rounded-xl p-12 text-center transition-all',
-                dragActive ? 'border-primary bg-primary/5' : 'border-slate-300 hover:border-primary'
+                'border-2 border-dashed rounded-2xl p-12 text-center transition-all',
+                dragActive ? 'border-blue-500 bg-blue-50' : 'border-slate-300 hover:border-blue-500'
               )}
             >
               <input
@@ -184,7 +184,7 @@ export function CSVImportDialog({
               </label>
             </div>
           ) : (
-            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border">
+            <div className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 border-2 border-slate-200">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-emerald-100">
                   <FileSpreadsheet className="h-5 w-5 text-emerald-600" />
@@ -213,7 +213,7 @@ export function CSVImportDialog({
 
           {/* File Format Info */}
           {!file && (
-            <div className="p-4 rounded-xl bg-blue-50 border border-blue-200">
+            <div className="p-4 rounded-2xl bg-blue-50 border-2 border-blue-200">
               <p className="text-sm font-medium text-blue-900 mb-2">Formato esperado del CSV:</p>
               <code className="text-xs bg-white px-2 py-1 rounded block">
                 nombre,email,telefono
@@ -229,7 +229,7 @@ export function CSVImportDialog({
             <div className="space-y-4">
               <div>
                 <h4 className="font-semibold mb-3">Vista Previa ({parsedData.length} alumnos)</h4>
-                <div className="border rounded-xl overflow-hidden max-h-48 overflow-y-auto">
+                <div className="border-2 border-slate-200 rounded-2xl overflow-hidden max-h-48 overflow-y-auto">
                   <table className="w-full text-sm">
                     <thead className="bg-slate-100">
                       <tr>
@@ -262,7 +262,7 @@ export function CSVImportDialog({
 
               {/* Duplicates Warning */}
               {duplicateEmails.size > 0 && (
-                <div className="p-3 rounded-lg bg-amber-50 border border-amber-200">
+                <div className="p-3 rounded-lg bg-amber-50 border-2 border-amber-200">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
                     <div className="flex-1">
@@ -281,7 +281,7 @@ export function CSVImportDialog({
 
               {/* Parse Errors */}
               {parseErrors.length > 0 && (
-                <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                <div className="p-3 rounded-lg bg-red-50 border-2 border-red-200">
                   <div className="flex items-start gap-2">
                     <AlertCircle className="h-5 w-5 text-red-600 shrink-0 mt-0.5" />
                     <div className="flex-1">
@@ -302,7 +302,7 @@ export function CSVImportDialog({
 
           {/* Import Result */}
           {importResult && (
-            <div className="p-4 rounded-xl bg-slate-50 border">
+            <div className="p-4 rounded-2xl bg-slate-50 border-2 border-slate-200">
               {importResult.created > 0 && (
                 <div className="flex items-center gap-2 text-emerald-700 mb-3">
                   <Check className="h-5 w-5" />

@@ -42,20 +42,20 @@ export function StudentSidebar() {
         setUserName(user.user_metadata?.full_name || user.email?.split('@')[0] || '');
 
         // Get school membership
-        const { data: membership } = await supabase
+        const { data: membership } = await (supabase
           .from('school_members')
           .select('school_id')
           .eq('user_id', user.id)
           .eq('status', 'active')
-          .maybeSingle();
+          .maybeSingle()) as any;
 
         if (membership?.school_id) {
           // Get school data with colors
-          const { data: school } = await supabase
+          const { data: school } = await (supabase
             .from('schools')
             .select('name, logo_url, primary_color, secondary_color')
             .eq('id', membership.school_id)
-            .maybeSingle();
+            .maybeSingle()) as any;
 
           if (school) {
             setSchoolName(school.name);
@@ -65,11 +65,11 @@ export function StudentSidebar() {
           }
 
           // Get activity points from profiles table
-          const { data: profile } = await supabase
+          const { data: profile } = await (supabase
             .from('profiles')
             .select('activity_points')
             .eq('user_id', user.id)
-            .maybeSingle();
+            .maybeSingle()) as any;
 
           setUserPoints(profile?.activity_points || 0);
         }

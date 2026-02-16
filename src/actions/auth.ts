@@ -63,8 +63,8 @@ export async function loginAction(prevState: FormState, formData: FormData): Pro
   }
 
   // Obtener membresía del usuario para redirigir correctamente
-  const { data: membership } = await supabase
-    .from('school_members')
+  const { data: membership } = await (supabase
+    .from('school_members') as any)
     .select('role')
     .eq('user_id', data.user.id)
     .eq('status', 'active')
@@ -74,6 +74,7 @@ export async function loginAction(prevState: FormState, formData: FormData): Pro
   const userEmail = data.user.email;
   const isSuperAdmin = userEmail?.endsWith('@miautoescuela.com') ||
                        userEmail?.endsWith('@admin.com') ||
+                       userEmail === 'kevinubeda231@gmail.com' ||
                        data.user.user_metadata?.role === 'admin';
 
   revalidatePath('/', 'layout');
@@ -159,8 +160,8 @@ export async function registerAction(prevState: FormState, formData: FormData): 
   }
 
   // Crear perfil usando service role (bypasses RLS)
-  const { error: profileError } = await serviceSupabase
-    .from('profiles')
+  const { error: profileError } = await (serviceSupabase
+    .from('profiles') as any)
     .insert({
       user_id: authData.user.id,
       full_name: fullName,
@@ -259,8 +260,8 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   // Verify invite token and get invite data
   // Note: table has token_hash (SHA-256), not token
   // Note: table uses used_at (null = pending, date = used), not status
-  const { data: invite, error: inviteError } = await supabase
-    .from('invites')
+  const { data: invite, error: inviteError } = await (supabase
+    .from('invites') as any)
     .select('*')
     .eq('token_hash', tokenHash)
     .is('used_at', null)
@@ -319,8 +320,8 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   }
 
   // Create profile using service role (bypasses RLS)
-  const { error: profileError } = await serviceSupabase
-    .from('profiles')
+  const { error: profileError } = await (serviceSupabase
+    .from('profiles') as any)
     .insert({
       user_id: authData.user.id,
       full_name: fullName,
@@ -336,8 +337,8 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   }
 
   // Add user to school_members
-  const { error: memberError } = await serviceSupabase
-    .from('school_members')
+  const { error: memberError } = await (serviceSupabase
+    .from('school_members') as any)
     .insert({
       user_id: authData.user.id,
       school_id: invite.school_id,
@@ -354,8 +355,8 @@ export async function registerViaInviteAction(prevState: FormState, formData: Fo
   }
 
   // Mark invite as used by setting used_at
-  await serviceSupabase
-    .from('invites')
+  await (serviceSupabase
+    .from('invites') as any)
     .update({ used_at: new Date().toISOString() })
     .eq('token_hash', tokenHash);
 

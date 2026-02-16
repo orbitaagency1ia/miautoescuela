@@ -12,13 +12,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's school membership
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -47,11 +47,11 @@ export async function POST(request: NextRequest) {
 
     // Check for existing emails
     const emails = students.map(s => s.email);
-    const { data: existingInvites } = await supabase
+    const { data: existingInvites } = await (supabase
       .from('invites')
       .select('email')
       .eq('school_id', schoolId)
-      .in('email', emails);
+      .in('email', emails)) as any;
 
     const existingEmails = new Set(existingInvites?.map((i: any) => i.email) || []);
 
@@ -68,8 +68,8 @@ export async function POST(request: NextRequest) {
         continue;
       }
 
-      const { error } = await supabase
-        .from('invites')
+      const { error } = await (supabase
+        .from('invites') as any)
         .insert({
           school_id: schoolId,
           email: student.email,

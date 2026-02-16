@@ -20,8 +20,8 @@ export async function createInviteAction(email: string, message?: string) {
   }
 
   // TEMPORAL: Obtener primera escuela disponible sin autenticación
-  const result = await supabase
-    .from('schools')
+  const result = await (supabase
+    .from('schools') as any)
     .select('id, subscription_status')
     .limit(1);
 
@@ -43,8 +43,8 @@ export async function createInviteAction(email: string, message?: string) {
   expiresAt.setDate(expiresAt.getDate() + INVITE_TOKEN_EXPIRY_DAYS);
 
   // Create invite
-  const { error: inviteError } = await supabase
-    .from('invites')
+  const { error: inviteError } = await (supabase
+    .from('invites') as any)
     .insert({
       school_id: school.id,
       email,
@@ -78,8 +78,8 @@ export async function getSchoolContext() {
   const supabase = await createClient();
 
   // TEMPORAL: Obtener primera escuela sin autenticación
-  const { data: school } = await supabase
-    .from('schools')
+  const { data: school } = await (supabase
+    .from('schools') as any)
     .select('id, name, slug, logo_url, primary_color, subscription_status')
     .limit(1)
     .maybeSingle();

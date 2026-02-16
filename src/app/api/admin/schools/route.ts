@@ -7,16 +7,33 @@ import { sendWelcomeEmail } from '@/lib/email';
 export async function GET() {
   const supabase = await createClient();
 
-  const { data: schools, error } = await supabase
+  // Primero obtener todas las escuelas
+  const { data: schools, error: schoolsError } = await (supabase
     .from('schools')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })) as any;
 
-  if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+  if (schoolsError) {
+    return NextResponse.json({ error: schoolsError.message }, { status: 500 });
   }
 
-  return NextResponse.json({ schools });
+  // Luego obtener los miembros de cada escuela por separado para evitar conflictos de aliases
+  const schoolsWithMembers = await Promise.all(
+    (schools || []).map(async (school) => {
+      const { data: members } = await (supabase
+        .from('school_members')
+        .select('user_id, role, status, profiles!inner(email, full_name)')
+        .eq('school_id', school.id)
+        .in('role', ['owner', 'admin'])) as any;
+
+      return {
+        ...school,
+        members: members || []
+      };
+    })
+  );
+
+  return NextResponse.json({ schools: schoolsWithMembers });
 }
 
 export async function POST(request: NextRequest) {
@@ -37,11 +54,11 @@ export async function POST(request: NextRequest) {
     const slug = generateSlug(name);
 
     // Check if slug exists
-    const { data: existingSchool } = await supabase
+    const { data: existingSchool } = await (supabase
       .from('schools')
       .select('id')
       .eq('slug', slug)
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (existingSchool) {
       return NextResponse.json(
@@ -63,13 +80,11 @@ export async function POST(request: NextRequest) {
       trial_ends_at: trialEndsAt.toISOString(),
     };
 
-    const insertResult = await supabase
-      .from('schools')
+    const { data: school, error: schoolError } = await (supabase
+      .from('schools') as any)
       .insert(schoolData)
       .select()
       .single();
-
-    const { data: school, error: schoolError } = insertResult as { data: any; error: any };
 
     if (schoolError) {
       return NextResponse.json(
@@ -112,13 +127,17 @@ export async function POST(request: NextRequest) {
     }
 
     // Create profile
-    await supabase.from('profiles').insert({
+    await (supabase
+      .from('profiles') as any)
+      .insert({
       user_id: authData.user.id,
       full_name: ownerName,
     });
 
     // Add as owner
-    await supabase.from('school_members').insert({
+    await (supabase
+      .from('school_members') as any)
+      .insert({
       school_id: school.id,
       user_id: authData.user.id,
       role: 'owner',

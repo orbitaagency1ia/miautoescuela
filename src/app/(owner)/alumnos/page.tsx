@@ -83,11 +83,12 @@ export default async function StudentsPage({
 
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="relative overflow-hidden rounded-[20px] bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-8 border border-slate-200/50">
-        <div className="absolute inset-0 bg-grid-slate-900/[0.04]"></div>
+        <div className="absolute inset-0 bg-grid-slate-900/[0.04]" />
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-pulse"></div>
-          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-0 right-0 w-96 h-96 bg-blue-500/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 animate-pulse" />
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-500/30 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2 animate-pulse" style={{ animationDelay: '1s' }} />
         </div>
         <div className="relative flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
@@ -96,7 +97,7 @@ export default async function StudentsPage({
                 Alumnos de {schoolName}
               </h1>
               <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-100 to-orange-100 border border-amber-200">
-                <Sparkles className="h-3.5 w-3.5 text-amber-600"></Sparkles>
+                <Sparkles className="h-3.5 w-3.5 text-amber-600" />
                 <span className="text-xs font-medium text-amber-700">Gestión</span>
               </div>
             </div>
@@ -107,6 +108,7 @@ export default async function StudentsPage({
         </div>
       </div>
 
+      {/* Client Wrapper with Tabs */}
       <StudentsPageClient primaryColor={primaryColor} secondaryColor={secondaryColor}>
         <Tabs defaultValue="students" className="w-full">
           <TabsList className="w-full h-auto p-1 bg-slate-100 rounded-2xl">
@@ -120,84 +122,102 @@ export default async function StudentsPage({
             </TabsTrigger>
           </TabsList>
 
+          {/* Students Tab */}
           <TabsContent value="students" className="mt-6 space-y-6">
+            {/* Stats Cards */}
             <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              <div className="group relative overflow-hidden rounded-[20px] bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <p className="text-base font-semibold text-slate-700 mb-2">Total Alumnos</p>
-                    <p className="text-5xl font-bold text-slate-900 leading-none">{totalStudents}</p>
-                    <p className="text-sm text-slate-500 mt-1">Registrados</p>
-                  </div>
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-md flex items-center justify-center">
-                    <Users className="h-6 w-6 text-white"></Users>
-                  </div>
-                </div>
-              </div>
-
-              <div className="group relative overflow-hidden rounded-[20px] bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <p className="text-base font-semibold text-slate-700 mb-2">Activos</p>
-                    <p className="text-5xl font-bold text-slate-900 leading-none">{activeStudents}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <TrendingUp className="h-4 w-4 text-emerald-500"></TrendingUp>
-                      <p className="text-sm font-semibold text-emerald-600">
-                        {totalStudents > 0 ? Math.round((activeStudents / totalStudents) * 100) : 0}%
-                      </p>
+              {/* Total Students */}
+              <div className="relative bg-white rounded-3xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden border-2 border-slate-100">
+                <div className="p-8">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <p className="text-base font-semibold text-slate-700 mb-2">Total Alumnos</p>
+                      <p className="text-5xl font-bold text-slate-900 leading-none">{totalStudents}</p>
+                      <p className="text-sm text-slate-500 mt-1">Registrados</p>
+                    </div>
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-md flex items-center justify-center">
+                      <Users className="h-6 w-6 text-white" />
                     </div>
                   </div>
                 </div>
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-md flex items-center justify-center">
-                  <Activity className="h-6 w-6 text-white"></Activity>
+              </div>
+
+              {/* Active Students */}
+              <div className="relative bg-white rounded-3xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden border-2 border-slate-100">
+                <div className="p-8">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <p className="text-base font-semibold text-slate-700 mb-2">Activos</p>
+                      <p className="text-5xl font-bold text-slate-900 leading-none">{activeStudents}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <TrendingUp className="h-4 w-4 text-emerald-500" />
+                        <p className="text-sm font-semibold text-emerald-600">
+                          {totalStudents > 0 ? Math.round((activeStudents / totalStudents) * 100) : 0}%
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-md flex items-center justify-center">
+                    <Activity className="h-6 w-6 text-white" />
+                  </div>
                 </div>
               </div>
 
-              <div className="group relative overflow-hidden rounded-[20px] bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <p className="text-base font-semibold text-slate-700 mb-2">Nuevos</p>
-                    <p className="text-5xl font-bold text-slate-900 leading-none">{newStudentsThisWeek}</p>
-                    <p className="text-sm text-slate-500 mt-1">Esta semana</p>
+              {/* New Students */}
+              <div className="relative bg-white rounded-3xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden border-2 border-slate-100">
+                <div className="p-8">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <p className="text-base font-semibold text-slate-700 mb-2">Nuevos</p>
+                      <p className="text-5xl font-bold text-slate-900 leading-none">{newStudentsThisWeek}</p>
+                      <p className="text-sm text-slate-500 mt-1">Esta semana</p>
+                    </div>
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-md flex items-center justify-center">
+                      <Calendar className="h-6 w-6 text-white" />
+                    </div>
                   </div>
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 shadow-md flex items-center justify-center">
-                    <Calendar className="h-6 w-6 text-white"></Calendar>
-                  </div>
+                </div>
               </div>
 
-              <div className="group relative overflow-hidden rounded-[20px] bg-white p-8 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex-1">
-                    <p className="text-base font-semibold text-slate-700 mb-2">Promedio Progreso</p>
-                    <p className="text-5xl font-bold text-slate-900 leading-none">--%</p>
-                    <p className="text-sm text-slate-500 mt-1">Completitud media</p>
+              {/* Progress */}
+              <div className="relative bg-white rounded-3xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden border-2 border-slate-100">
+                <div className="p-8">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <p className="text-base font-semibold text-slate-700 mb-2">Promedio Progreso</p>
+                      <p className="text-5xl font-bold text-slate-900 leading-none">--%</p>
+                      <p className="text-sm text-slate-500 mt-1">Completitud media</p>
+                    </div>
+                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-md flex items-center justify-center">
+                      <BookOpen className="h-6 w-6 text-white" />
+                    </div>
                   </div>
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-md flex items-center justify-center">
-                    <BookOpen className="h-6 w-6 text-white"></BookOpen>
-                  </div>
+                </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-[20px] border-2 border-slate-100 p-6">
+            {/* Search and Filter */}
+            <div className="bg-white rounded-3xl border-2 border-slate-100 p-6">
               <div className="flex flex-col lg:flex-row gap-4">
                 <div className="flex-1">
                   <Input placeholder="Buscar alumno por nombre..." name="search" defaultValue={searchQuery} />
                 </div>
                 <div className="flex gap-2">
                   <Link href="/alumnos">
-                    <Button variant={statusFilter === undefined ? "default" : "outline"} className="rounded-full">Todos</Button>
+                    <Button variant={statusFilter === undefined ? "default" : "outline"}>Todos</Button>
                   </Link>
                   <Link href="/alumnos?filter=active">
-                    <Button variant={statusFilter === 'active' ? "default" : "outline"} className="rounded-full">Activos</Button>
+                    <Button variant={statusFilter === 'active' ? "default" : "outline"}>Activos</Button>
                   </Link>
                   <Link href="/alumnos?filter=suspended">
-                    <Button variant={statusFilter === 'suspended' ? "default" : "outline"} className="rounded-full">Inactivos</Button>
+                    <Button variant={statusFilter === 'suspended' ? "default" : "outline"}>Inactivos</Button>
                   </Link>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-[20px] shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
+            {/* Students List */}
+            <div className="bg-white rounded-3xl shadow-[0_1px_4px_rgba(0,0,0,0.06)] overflow-hidden border-2 border-slate-100">
               <div className="border-b p-6">
                 <h3 className="text-lg font-semibold text-slate-900">Listado de Alumnos</h3>
                 <p className="text-sm text-slate-500">{filteredStudents.length} alumnos</p>
@@ -205,7 +225,7 @@ export default async function StudentsPage({
               <div className="p-0">
                 {!filteredStudents || filteredStudents.length === 0 ? (
                   <div className="text-center py-16">
-                    <Users className="h-16 w-16 text-slate-400 mx-auto mb-6"></Users>
+                    <Users className="h-16 w-16 text-slate-400 mx-auto mb-6" />
                     <h3 className="text-xl font-semibold mb-2">No hay alumnos registrados</h3>
                     <p className="text-slate-500 mb-6">Invita tu primer alumno para empezar a usar la plataforma</p>
                     <Link href="/alumnos/invitar">
@@ -226,34 +246,32 @@ export default async function StudentsPage({
                             <div className="flex items-center gap-2 mb-1">
                               <p className="font-semibold text-lg">{student.profiles?.full_name || 'Sin nombre'}</p>
                               <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold', student.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600')}>
-                                <span className={cn('w-1.5 h-1.5 rounded-full mr-1.5 inline-block', student.status === 'active' ? 'bg-emerald-500' : 'bg-slate-500')}></span>
+                                <span className={cn('w-1.5 h-1.5 rounded-full mr-1.5 inline-block', student.status === 'active' ? 'bg-emerald-500' : 'bg-slate-500')} />
                                 {student.status === 'active' ? 'Activo' : 'Inactivo'}
                               </span>
-                              </span>
-                            </div>
                             </div>
                             <div className="flex items-center gap-4 text-sm text-slate-500">
                               <div className="flex items-center gap-1.5">
-                                <Calendar className="h-4 w-4"></Calendar>
+                                <Calendar className="h-4 w-4" />
                                 <span>Registro: {student.joined_at ? format(new Date(student.joined_at), 'dd MMM yyyy', { locale: es }) : '-'}</span>
                               </div>
                               <div className="flex items-center gap-1.5">
-                                <BookOpen className="h-4 w-4"></BookOpen>
+                                <BookOpen className="h-4 w-4" />
                                 <span>0 clases</span>
                               </div>
                             </div>
                           </div>
+                          <ArrowRight className="h-5 w-5 text-slate-300" />
                         </div>
-                        <ArrowRight className="h-5 w-5 text-slate-300"></ArrowRight>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
+                      </Link>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>
           </TabsContent>
 
+          {/* Codes Tab */}
           <TabsContent value="codes" className="mt-6">
             <JoinCodesManager primaryColor={primaryColor} secondaryColor={secondaryColor} />
           </TabsContent>

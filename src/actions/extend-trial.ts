@@ -41,8 +41,8 @@ export async function extendTrialAction(
     }
 
     // Get current trial_ends_at
-    const { data: school, error: fetchError } = await supabase
-      .from('schools')
+    const { data: school, error: fetchError } = await (supabase
+      .from('schools') as any)
       .select('trial_ends_at')
       .eq('id', schoolId)
       .single();
@@ -74,8 +74,8 @@ export async function extendTrialAction(
 
     // Update the school with new trial_ends_at
     // Keep subscription_status as 'trialing'
-    const { error: updateError } = await supabase
-      .from('schools')
+    const { error: updateError } = await (supabase
+      .from('schools') as any)
       .update({
         trial_ends_at: newTrialEnd.toISOString(),
         subscription_status: 'trialing',

@@ -14,13 +14,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Get user's school membership
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get all invites/codes for this school
-    const { data: codes, error } = await supabase
+    const { data: codes, error } = await (supabase
       .from('invites')
       .select(`
         id,
@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
         created_at
       `)
       .eq('school_id', membership.school_id)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })) as any;
 
     if (error) {
       return NextResponse.json(
@@ -80,13 +80,13 @@ export async function POST(request: NextRequest) {
     }
 
     // Get user's school membership
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select('school_id')
       .eq('user_id', user.id)
       .eq('status', 'active')
       .eq('role', 'owner')
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -106,8 +106,8 @@ export async function POST(request: NextRequest) {
     expiresAt.setDate(expiresAt.getDate() + expiresInDays);
 
     // Create invite
-    const { data: invite, error } = await supabase
-      .from('invites')
+    const { data: invite, error } = await (supabase
+      .from('invites') as any)
       .insert({
         school_id: membership.school_id,
         email: `${code}@code`,

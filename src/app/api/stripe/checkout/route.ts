@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get school_id and stripe_customer_id
-    const { data: membership } = await supabase
+    const { data: membership } = await (supabase
       .from('school_members')
       .select(`
         school_id,
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
       `)
       .eq('user_id', user.id)
       .eq('status', 'active')
-      .single();
+      .single()) as any;
 
     if (!membership) {
       return NextResponse.json(
@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
       customerId = customer.id;
 
       // Save customer_id to school
-      await supabase
-        .from('schools')
+      await (supabase
+        .from('schools') as any)
         .update({ stripe_customer_id: customerId })
         .eq('id', membership.school_id);
     }

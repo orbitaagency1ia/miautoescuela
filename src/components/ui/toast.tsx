@@ -43,7 +43,7 @@ const ToastClose = React.forwardRef<
   <button
     ref={ref}
     className={cn(
-      'absolute right-2 top-2 rounded-xl p-2 text-foreground/50 opacity-0 transition-all duration-200 hover:text-foreground hover:bg-accent focus:opacity-100 focus:outline-none focus:ring-2 focus:ring-primary/20 group-hover:opacity-100',
+      'absolute right-2 top-2 z-10 rounded-lg p-1.5 text-slate-400 transition-all duration-200 hover:bg-slate-100 hover:text-slate-600 focus:outline-none focus:ring-2 focus:ring-slate-400',
       className
     )}
     {...props}
@@ -83,9 +83,11 @@ type ToastPropsInner = React.ComponentPropsWithoutRef<typeof Toast>;
 type ToastContentProps = ToastPropsInner & {
   title?: string;
   description?: string;
+  onDismiss?: () => void;
+  open?: boolean;
 };
 
-const ToastContent = ({ title, description, variant = 'default', ...props }: ToastContentProps) => {
+const ToastContent = ({ title, description, variant = 'default', onDismiss, open = true, ...props }: ToastContentProps) => {
   const getIcon = () => {
     switch (variant) {
       case 'success':
@@ -108,7 +110,7 @@ const ToastContent = ({ title, description, variant = 'default', ...props }: Toa
           {description && <ToastDescription>{description}</ToastDescription>}
         </div>
       </div>
-      <ToastClose />
+      <ToastClose onClick={onDismiss} />
     </Toast>
   );
 };

@@ -78,21 +78,21 @@ export async function POST(request: NextRequest) {
     }
 
     // First, ensure profile exists (fix for registration bug)
-    const { data: existingProfile } = await supabaseService
+    const { data: existingProfile } = await (supabaseService
       .from('profiles')
       .select('id, user_id')
       .eq('user_id', userId)
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (!existingProfile) {
       // Create profile if it doesn't exist
-      const { error: profileError } = await supabaseService
+      const { error: profileError } = await (supabaseService
         .from('profiles')
         .insert({
           id: userId,
           user_id: userId,
           full_name: userName || userEmail.split('@')[0],
-        });
+        })) as any;
 
       if (profileError) {
         console.error('Error creating profile:', profileError);
@@ -104,11 +104,11 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if slug is already taken
-    const { data: existingSchool } = await supabaseService
+    const { data: existingSchool } = await (supabaseService
       .from('schools')
       .select('id')
       .eq('slug', slug)
-      .maybeSingle();
+      .maybeSingle()) as any;
 
     if (existingSchool) {
       return NextResponse.json(
@@ -129,7 +129,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create school with trial subscription and all wizard data
-    const { data: school, error: schoolError } = await supabaseService
+    const { data: school, error: schoolError } = await (supabaseService
       .from('schools')
       .insert({
         name,
@@ -147,7 +147,7 @@ export async function POST(request: NextRequest) {
         trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString(),
       })
       .select('id')
-      .single();
+      .single()) as any;
 
     if (schoolError || !school) {
       console.error('Error creating school:', schoolError);
@@ -162,8 +162,8 @@ export async function POST(request: NextRequest) {
       if (logo) {
         const correctLogoUrl = await uploadFile(logo, school.id, 'logo');
         if (correctLogoUrl) {
-          await supabaseService
-            .from('schools')
+          await (supabaseService
+            .from('schools') as any)
             .update({ logo_url: correctLogoUrl })
             .eq('id', school.id);
         }
@@ -171,8 +171,8 @@ export async function POST(request: NextRequest) {
       if (banner) {
         const correctBannerUrl = await uploadFile(banner, school.id, 'banner');
         if (correctBannerUrl) {
-          await supabaseService
-            .from('schools')
+          await (supabaseService
+            .from('schools') as any)
             .update({ banner_url: correctBannerUrl })
             .eq('id', school.id);
         }
@@ -180,8 +180,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Add user as owner of school
-    const { error: memberError } = await supabaseService
-      .from('school_members')
+    const { error: memberError } = await (supabaseService
+      .from('school_members') as any)
       .insert({
         school_id: school.id,
         user_id: userId,
@@ -199,8 +199,8 @@ export async function POST(request: NextRequest) {
 
     // Create first module if requested
     if (createFirstModule && firstModuleName) {
-      const { error: moduleError } = await supabaseService
-        .from('modules')
+      const { error: moduleError } = await (supabaseService
+        .from('modules') as any)
         .insert({
           school_id: school.id,
           title: firstModuleName,
@@ -226,8 +226,8 @@ export async function POST(request: NextRequest) {
       expiresAt.setDate(expiresAt.getDate() + 7);
 
       for (const email of emails) {
-        await supabaseService
-          .from('invites')
+        await (supabaseService
+          .from('invites') as any)
           .insert({
             school_id: school.id,
             email: email,
